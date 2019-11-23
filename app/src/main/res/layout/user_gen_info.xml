@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:paddingBottom="10dp"
+        >
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/mark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardCornerRadius="5dp"
+            android:layout_marginTop="5dp"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+                <TextView
+                    android:id="@+id/markTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="@string/marks_title_text"
+                    android:textColor="@color/colorPrimaryDark"/>
+                <LinearLayout
+                    android:id="@+id/pCheckedContainner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/markTitle"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    >
+                    <CheckBox
+                        android:id="@+id/btnCheckInwi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/check_text_inwi"
+                        />
+                    <CheckBox
+                        android:id="@+id/btnCheckOrange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/check_text_orng"
+                        />
+                    <CheckBox
+                        android:id="@+id/btnCheckIam"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/check_text_iam"
+                        />
+                    <CheckBox
+                        android:id="@+id/btnCheckTaba"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/check_text_taba"
+                        />
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/authorMark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/pCheckedContainner"
+                    android:layout_marginTop="5dp"
+                    android:minWidth="200dp"
+                    android:hint="@string/author_marks"
+                    android:textAlignment="center"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:inputType="text"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/dealers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mark"
+            app:cardCornerRadius="5dp"
+            android:layout_marginTop="5dp"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+                <TextView
+                    android:id="@+id/dealerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="@string/dealer_title_text"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dealerTitle"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="kjhjhjkhkj"
+                                android:layout_weight="1"
+                                android:visibility="invisible"
+                                android:gravity="center"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasOrgDealer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_text_orng"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasInwiDealer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_text_inwi"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasIamDealer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_text_inwi"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_activation"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasOrgDealerActiva"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasInwiDealerActiva"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasIamDealerActiva"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_recharge"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasOrgDealerRecharge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasInwiDealerRecharge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasIamDealerRecharge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_adventageous"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasOrgDealerAdv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasInwiDealerAdv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasIamDealerAdv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_qte_max"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <EditText
+                                android:id="@+id/OrgDealerMaxQte"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="number"
+                                />
+                            <EditText
+                                android:id="@+id/InwiDealerMaxQte"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="number"
+                                />
+                            <EditText
+                                android:id="@+id/IamDealerMaxQte"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="number"
+                                />
+                        </TableRow>
+
+                    </TableLayout>
+
+                </LinearLayout>
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cims"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dealers"
+            app:cardCornerRadius="5dp"
+            android:layout_marginTop="5dp"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+                <TextView
+                    android:id="@+id/cimTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="@string/cims_title_text"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cimTitle"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="kjhjhjkhkj"
+                                android:layout_weight="1"
+                                android:visibility="invisible"
+                                android:gravity="center"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasOrgCim"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_text_orng"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasInwiCim"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_text_inwi"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <CheckBox
+                                android:id="@+id/hasIamCim"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_text_inwi"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_prix_unit"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <EditText
+                                android:id="@+id/OrgCimPrixu"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="numberDecimal"
+                                />
+                            <EditText
+                                android:id="@+id/InwiCimPrixu"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="numberDecimal"
+                                />
+                            <EditText
+                                android:id="@+id/IamCimPrixu"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="numberDecimal"
+                                />
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_qte_max"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <EditText
+                                android:id="@+id/OrgCimMaxQte"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="number"
+                                />
+                            <EditText
+                                android:id="@+id/InwiCimMaxQte"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="number"
+                                />
+                            <EditText
+                                android:id="@+id/IamCimMaxQte"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="number"
+                                />
+                        </TableRow>
+
+                    </TableLayout>
+
+                </LinearLayout>
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/MobileMonny"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cims"
+            app:cardCornerRadius="5dp"
+            android:layout_marginTop="5dp"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+                <TextView
+                    android:id="@+id/MobileTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="@string/mobile_title_text"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/MobileTitle"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+                    >
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/txt_intersse"
+                                android:layout_weight="1"
+                                />
+                            <RadioGroup
+                                android:id="@+id/radioInterests"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:orientation="horizontal"
+                                >
+
+                                <RadioButton
+                                    android:id="@+id/btnInterestsYes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/btn_text_yes"
+                                    android:checked="true"
+                                    />
+
+                                <RadioButton
+                                    android:id="@+id/btnInterestsNo"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/btn_text_no"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginStart="20dp"
+                                    android:checked="false"/>
+
+
+                            </RadioGroup>
+
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/txt_propose"
+                                android:layout_weight="1"
+                                />
+                            <RadioGroup
+                                android:id="@+id/radioPropose"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:orientation="horizontal"
+                                >
+
+                                <RadioButton
+                                    android:id="@+id/btnProposeYes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/btn_text_yes"
+                                    android:checked="true"
+                                    />
+
+                                <RadioButton
+                                    android:id="@+id/btnProposeNo"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/btn_text_no"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginStart="20dp"
+                                    android:checked="false"/>
+
+
+                            </RadioGroup>
+
+                        </TableRow>
+                    </TableLayout>
+
+                </LinearLayout>
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/telephony"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/MobileMonny"
+            app:cardCornerRadius="5dp"
+            android:layout_marginTop="5dp"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+                <TextView
+                    android:id="@+id/telephonyTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="@string/telephony_title_text"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <LinearLayout
+                    android:id="@+id/TelCont"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/telephonyTitle"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/txt_telephony"
+                                android:layout_weight="1"
+                                />
+                            <RadioGroup
+                                android:id="@+id/radioTelephony"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:orientation="horizontal"
+                                >
+
+                                <RadioButton
+                                    android:id="@+id/btnTelephonyYes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/btn_text_yes"
+                                    android:checked="false"
+                                    />
+
+                                <RadioButton
+                                    android:id="@+id/btnTelephonyNo"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/btn_text_no"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginStart="20dp"
+                                    android:checked="true"/>
+
+
+                            </RadioGroup>
+                        </TableRow>
+
+
+                    </TableLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/TelCont"
+                    android:gravity="center">
+
+                    <RadioGroup
+                        android:id="@+id/TelephonyRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:gravity="center">
+                        <RadioButton
+                            android:id="@+id/btnTelBasGamme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/btn_bas_gamme_text"
+                            android:enabled="false"
+                            />
+
+                        <RadioButton
+                            android:id="@+id/btnTelHautGamme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"
+                            android:text="@string/btn_haut_gamme_text"/>
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/accessoir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/telephony"
+            app:cardCornerRadius="5dp"
+            android:layout_marginTop="5dp"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+                <TextView
+                    android:id="@+id/accessoirTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="@string/text_accessoire_title"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <LinearLayout
+                    android:id="@+id/AccssCont"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/accessoirTitle"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/text_accessoire_title"
+                                android:layout_weight="1"
+                                />
+                            <RadioGroup
+                                android:id="@+id/radioAccessoir"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:orientation="horizontal"
+                                >
+
+                                <RadioButton
+                                    android:id="@+id/btnAccessYes"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/btn_text_yes"
+                                    android:checked="false"
+                                    />
+
+                                <RadioButton
+                                    android:id="@+id/btnAccessNo"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/btn_text_no"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginStart="20dp"
+                                    android:checked="true"/>
+
+
+                            </RadioGroup>
+                        </TableRow>
+
+
+                    </TableLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/AccssCont"
+                    android:gravity="center">
+
+                    <RadioGroup
+                        android:id="@+id/AccessGammeRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:gravity="center">
+                        <RadioButton
+                            android:id="@+id/btnAccssBasGamme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/btn_bas_gamme_text"
+                            android:enabled="false"
+                            />
+
+                        <RadioButton
+                            android:id="@+id/btnAccessHautGamme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"
+                            android:text="@string/btn_haut_gamme_text"/>
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/btnAddValidUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_add_user_valid"
+            android:background="@drawable/btn_red_round"
+            android:textColor="@color/colorwhite"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/accessoir"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
