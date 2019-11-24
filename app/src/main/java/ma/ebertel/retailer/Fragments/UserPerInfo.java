@@ -71,8 +71,7 @@ public class UserPerInfo extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Toast.makeText(getContext(), "On Create", Toast.LENGTH_SHORT).show();
-        Log.d("res", "onCreateView: on create ");
+
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.user_per_info, container, false);
         TextView txtCode = viewGroup.findViewById(R.id.txtScanCodeBar);
         clientImage = viewGroup.findViewById(R.id.clientImage);
@@ -168,6 +167,8 @@ public class UserPerInfo extends Fragment implements
 
         locationManager.requestLocationUpdates("gps", 0, 0,locationListener);
         activity.clientLocation = onlyOneLocation.getLatitude()+","+onlyOneLocation.getLongitude();
+
+        activity.pager.setCurrentItem(1,true);
 
         Log.d("data", "saveDateAndSlide: asdress "+activity.clientAddress);
         Log.d("data", "saveDateAndSlide: email "+activity.clientEmail);

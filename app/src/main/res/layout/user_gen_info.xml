@@ -55,25 +55,25 @@
                     android:orientation="horizontal"
                     >
                     <CheckBox
-                        android:id="@+id/btnCheckInwi"
+                        android:id="@+id/chkPotInwi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/check_text_inwi"
                         />
                     <CheckBox
-                        android:id="@+id/btnCheckOrange"
+                        android:id="@+id/chkPotOrange"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/check_text_orng"
                         />
                     <CheckBox
-                        android:id="@+id/btnCheckIam"
+                        android:id="@+id/chkPotIam"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/check_text_iam"
                         />
                     <CheckBox
-                        android:id="@+id/btnCheckTaba"
+                        android:id="@+id/chkPotTaba"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/check_text_taba"
@@ -152,7 +152,7 @@
                                 android:gravity="center"
                                 />
                             <CheckBox
-                                android:id="@+id/hasOrgDealer"
+                                android:id="@+id/chkHasOrgDealer"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/check_text_orng"
@@ -160,7 +160,7 @@
                                 android:gravity="center"
                                 />
                             <CheckBox
-                                android:id="@+id/hasInwiDealer"
+                                android:id="@+id/chkHasInwiDealer"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/check_text_inwi"
@@ -168,10 +168,10 @@
                                 android:gravity="center"
                                 />
                             <CheckBox
-                                android:id="@+id/hasIamDealer"
+                                android:id="@+id/chkHasIamDealer"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/check_text_inwi"
+                                android:text="@string/check_text_iam"
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 />
@@ -186,7 +186,7 @@
                                 android:gravity="center"
                                 />
                             <CheckBox
-                                android:id="@+id/hasOrgDealerActiva"
+                                android:id="@+id/chkHasOrgDealerActiva"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -194,7 +194,7 @@
                                 android:enabled="false"
                                 />
                             <CheckBox
-                                android:id="@+id/hasInwiDealerActiva"
+                                android:id="@+id/chkHasInwiDealerActiva"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -202,7 +202,7 @@
                                 android:enabled="false"
                                 />
                             <CheckBox
-                                android:id="@+id/hasIamDealerActiva"
+                                android:id="@+id/chkHasIamDealerActiva"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -220,7 +220,7 @@
                                 android:gravity="center"
                                 />
                             <CheckBox
-                                android:id="@+id/hasOrgDealerRecharge"
+                                android:id="@+id/chkHasOrgDealerRecharge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -228,7 +228,7 @@
                                 android:enabled="false"
                                 />
                             <CheckBox
-                                android:id="@+id/hasInwiDealerRecharge"
+                                android:id="@+id/chkHasInwiDealerRecharge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -236,7 +236,7 @@
                                 android:enabled="false"
                                 />
                             <CheckBox
-                                android:id="@+id/hasIamDealerRecharge"
+                                android:id="@+id/chkHasIamDealerRecharge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -254,7 +254,7 @@
                                 android:gravity="center"
                                 />
                             <CheckBox
-                                android:id="@+id/hasOrgDealerAdv"
+                                android:id="@+id/chkHasOrgDealerAdv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -262,7 +262,7 @@
                                 android:enabled="false"
                                 />
                             <CheckBox
-                                android:id="@+id/hasInwiDealerAdv"
+                                android:id="@+id/chkHasInwiDealerAdv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -270,7 +270,7 @@
                                 android:enabled="false"
                                 />
                             <CheckBox
-                                android:id="@+id/hasIamDealerAdv"
+                                android:id="@+id/chkHasIamDealerAdv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -288,7 +288,7 @@
                                 android:gravity="center"
                                 />
                             <EditText
-                                android:id="@+id/OrgDealerMaxQte"
+                                android:id="@+id/edtOrgDealerMaxQte"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -297,7 +297,7 @@
                                 android:inputType="number"
                                 />
                             <EditText
-                                android:id="@+id/InwiDealerMaxQte"
+                                android:id="@+id/edtInwiDealerMaxQte"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -306,7 +306,7 @@
                                 android:inputType="number"
                                 />
                             <EditText
-                                android:id="@+id/IamDealerMaxQte"
+                                android:id="@+id/edtIamDealerMaxQte"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -328,12 +328,137 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cims"
+            android:id="@+id/recharge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dealers"
+            app:cardCornerRadius="5dp"
+            android:layout_marginTop="5dp"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+                <TextView
+                    android:id="@+id/rechargeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="Recharge"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rechargeTitle"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:visibility="invisible"
+                                />
+                            <CheckBox
+                                android:id="@+id/chkHasOrgRecharge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_text_orng"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <CheckBox
+                                android:id="@+id/chkHasInwiRecharge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_text_inwi"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <CheckBox
+                                android:id="@+id/chkHasIamRecharge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_text_iam"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_qte_max"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <EditText
+                                android:id="@+id/edtOrgRechargeMax"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="numberDecimal"
+                                />
+                            <EditText
+                                android:id="@+id/edtInwiRechargeMax"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="numberDecimal"
+                                />
+                            <EditText
+                                android:id="@+id/edtIamRechargeMax"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                android:inputType="numberDecimal"
+                                />
+                        </TableRow>
+
+
+                    </TableLayout>
+
+                </LinearLayout>
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cims"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recharge"
             app:cardCornerRadius="5dp"
             android:layout_marginTop="5dp"
             >
@@ -379,7 +504,7 @@
                                 android:gravity="center"
                                 />
                             <CheckBox
-                                android:id="@+id/hasOrgCim"
+                                android:id="@+id/chkHasOrgCim"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/check_text_orng"
@@ -387,7 +512,7 @@
                                 android:gravity="center"
                                 />
                             <CheckBox
-                                android:id="@+id/hasInwiCim"
+                                android:id="@+id/chkHasInwiCim"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/check_text_inwi"
@@ -395,10 +520,10 @@
                                 android:gravity="center"
                                 />
                             <CheckBox
-                                android:id="@+id/hasIamCim"
+                                android:id="@+id/chkHasIamCim"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/check_text_inwi"
+                                android:text="@string/check_text_iam"
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 />
@@ -413,7 +538,7 @@
                                 android:gravity="center"
                                 />
                             <EditText
-                                android:id="@+id/OrgCimPrixu"
+                                android:id="@+id/edtOrgCimPrixu"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -422,7 +547,7 @@
                                 android:inputType="numberDecimal"
                                 />
                             <EditText
-                                android:id="@+id/InwiCimPrixu"
+                                android:id="@+id/edtInwiCimPrixu"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -431,7 +556,7 @@
                                 android:inputType="numberDecimal"
                                 />
                             <EditText
-                                android:id="@+id/IamCimPrixu"
+                                android:id="@+id/edtIamCimPrixu"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -450,7 +575,7 @@
                                 android:gravity="center"
                                 />
                             <EditText
-                                android:id="@+id/OrgCimMaxQte"
+                                android:id="@+id/edtOrgCimMaxQte"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -459,7 +584,7 @@
                                 android:inputType="number"
                                 />
                             <EditText
-                                android:id="@+id/InwiCimMaxQte"
+                                android:id="@+id/edtInwiCimMaxQte"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -468,7 +593,7 @@
                                 android:inputType="number"
                                 />
                             <EditText
-                                android:id="@+id/IamCimMaxQte"
+                                android:id="@+id/edtIamCimMaxQte"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -723,6 +848,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/btn_bas_gamme_text"
                             android:enabled="false"
+                            android:checked="true"
                             />
 
                         <RadioButton
@@ -850,6 +976,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/btn_bas_gamme_text"
                             android:enabled="false"
+                            android:checked="true"
                             />
 
                         <RadioButton

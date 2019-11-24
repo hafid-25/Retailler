@@ -28,6 +28,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ma.ebertel.retailer.Adapters.ViewPagerAdapter;
 import ma.ebertel.retailer.Fragments.About;
 import ma.ebertel.retailer.Fragments.Home;
@@ -38,7 +41,7 @@ import ma.ebertel.retailer.Fragments.UserPerInfo;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ViewPager pager;
+    public ViewPager pager;
     private ViewPagerAdapter pagerAdapter;
     private FrameLayout wrapper;
 
@@ -55,6 +58,22 @@ public class MainActivity extends AppCompatActivity
     public boolean clientSatisfacion = true;
     public boolean clientInterssCnss = true;
     public String clientLocation = "";
+
+    public List<String> Potence = new ArrayList<>();
+    public String authorPot = "";
+
+    public List<String[]> Dealers = new ArrayList<>();
+    public List<String[]> Rechargs = new ArrayList<>();
+    public List<String[]> Sims = new ArrayList<>();
+
+    public boolean MobileMonyInteress = true;
+    public boolean MobileMonyPropose  = true;
+
+    public boolean Telephony = false;
+    public String TelephonyGamme = "Bas Gamme";
+
+    public boolean Accessoire = false;
+    public String AccessoireGamme = "Bas Gamme";
 
 
 
@@ -94,6 +113,7 @@ public class MainActivity extends AppCompatActivity
         }else {
             getSupportFragmentManager().beginTransaction().replace(R.id.wrapper,new Sealer(this,codeBarContent)).commit();
         }
+
     }
 
     @Override

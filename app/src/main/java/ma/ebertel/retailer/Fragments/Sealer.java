@@ -32,6 +32,7 @@ public class Sealer extends Fragment {
         ViewPager pager = viewGroup.findViewById(R.id.pager);
         ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(activity,activity.getSupportFragmentManager(),codeBare);
         pager.setAdapter(pagerAdapter);
+        activity.pager = pager;
         return viewGroup;
     }
 }
