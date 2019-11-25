@@ -1,12 +1,25 @@
 package ma.ebertel.retailer;
 
+import android.Manifest;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -28,8 +41,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ma.ebertel.retailer.Adapters.ViewPagerAdapter;
 import ma.ebertel.retailer.Fragments.About;
@@ -44,6 +62,10 @@ public class MainActivity extends AppCompatActivity
     public ViewPager pager;
     private ViewPagerAdapter pagerAdapter;
     private FrameLayout wrapper;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+    private boolean isUserVond = false;
+    private boolean isUserVis = false;
 
     private String codeBarContent ="";
     public Bitmap clientImage;
@@ -75,8 +97,7 @@ public class MainActivity extends AppCompatActivity
     public boolean Accessoire = false;
     public String AccessoireGamme = "Bas Gamme";
 
-
-
+    public String serverUrl = "http://hafid.skandev.com/addClient.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,13 +124,36 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        sharedPreferences = this.getSharedPreferences(getString(R.string.shared_name), Context.MODE_PRIVATE);
+
+        verifyLogin();
     }
+
+    private void verifyLogin() {
+       String login = sharedPreferences.getString("login","0");
+       String role = sharedPreferences.getString("role","0");
+
+       if(login.equals("0")){
+           Intent redirect = new Intent(MainActivity.this,Login.class);
+           startActivity(redirect);
+       }else if(login.equals("1")){
+           if(role.equals("1")){
+               isUserVond = true;
+               isUserVis = false;
+           }else if(role.equals("2")){
+               isUserVond = false;
+               isUserVis = true;
+           }
+       }
+
+    }
+
 
     @Override
     protected void onStart() {
         super.onStart();
         if(codeBarContent.equals("")){
-            getSupportFragmentManager().beginTransaction().replace(R.id.wrapper,new Home(this)).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.wrapper,new Home(this,sharedPreferences)).commit();
         }else {
             getSupportFragmentManager().beginTransaction().replace(R.id.wrapper,new Sealer(this,codeBarContent)).commit();
         }
@@ -155,16 +199,25 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.wrapper,new Home(this)).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.wrapper,new Home(this,sharedPreferences)).commit();
         } else if (id == R.id.nav_about) {
             getSupportFragmentManager().beginTransaction().replace(R.id.wrapper,new About()).commit();
         } else if (id == R.id.nav_signOut) {
-
+            signOut();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void signOut() {
+        editor = sharedPreferences.edit();
+        editor.putString("login","0");
+        editor.putString("role","0");
+        editor.commit();
+        Intent login = new Intent(MainActivity.this,Login.class);
+        startActivity(login);
     }
 
     public void showAddUser(){
@@ -187,5 +240,39 @@ public class MainActivity extends AppCompatActivity
 
             }
         }
+    }
+
+    public void connect(){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, serverUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(MainActivity.this, "response is here ", Toast.LENGTH_LONG).show();
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String responce = jsonObject.getString("response");
+                            Toast.makeText(MainActivity.this, "response is "+responce, Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(MainActivity.this, "Failed To Create Json", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "error is here ", Toast.LENGTH_LONG).show();
+                Log.d("error", "onErrorResponse: "+error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("name","hafid id-baha");
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 }

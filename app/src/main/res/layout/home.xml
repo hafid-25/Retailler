@@ -32,7 +32,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="UserName"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"/>
             <TextView
@@ -42,7 +41,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/username"
-                android:text="First name and secound name"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"/>
             <TextView
@@ -52,7 +50,15 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fullname"
-                android:text="user email goes her"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+            <TextView
+                android:id="@+id/userRole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/email"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"/>
             <Button
@@ -62,7 +68,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/email"
+                app:layout_constraintTop_toBottomOf="@id/userRole"
                 android:layout_marginTop="40dp"
                 android:background="@drawable/btn_orange_round"
                 android:textColor="@color/colorwhite"

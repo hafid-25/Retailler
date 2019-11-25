@@ -11,6 +11,7 @@
     <string name="menu_about">A Props</string>
     <string name="menu_singout">Déconnexion</string>
     <string name="btn_add_new_user_text">Add New User</string>
+    <string name="btn_visit_user_text">Visit User</string>
     <string name="codebar_title_text">Scan CodeBar</string>
     <string name="codebar_scan_btn_text">Start Your Scan</string>
     <string name="client_name">Full Name</string>
@@ -61,6 +62,6 @@
     <string name="txt_username_hint">User Name</string>
     <string name="txt_password_hint">Password</string>
     <string name="btn_login_title">Login</string>
-
+    <string name="shared_name">retailer</string>
 
 </resources>
