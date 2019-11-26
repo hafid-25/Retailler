@@ -1,5 +1,6 @@
 package ma.ebertel.retailer.Fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.style.TtsSpan;
 import android.util.Log;
@@ -18,6 +19,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import ma.ebertel.retailer.Helpers.BitmapHelper;
+import ma.ebertel.retailer.Login;
 import ma.ebertel.retailer.MainActivity;
 import ma.ebertel.retailer.R;
 
@@ -42,6 +59,8 @@ public class UserGenInfo extends Fragment implements
     public RadioGroup radioPropose,radioInterests,radioTelephony,TelephonyRadioGroup,radioAccessoir,AccessGammeRadioGroup;
     public RadioButton btnAccssBasGamme,btnAccessHautGamme
                         ,btnTelHautGamme,btnTelBasGamme;
+
+    public String submitUrl = "http://hafid.skandev.com/addClient.php";
 
     public UserGenInfo(MainActivity activity){
         this.activity = activity;
@@ -69,6 +88,7 @@ public class UserGenInfo extends Fragment implements
         radioTelephony.setOnCheckedChangeListener(this);
         TelephonyRadioGroup.setOnCheckedChangeListener(this);
         radioAccessoir.setOnCheckedChangeListener(this);
+        AccessGammeRadioGroup.setOnCheckedChangeListener(this);
         //
         chkPotInwi = viewGroup.findViewById(R.id.chkPotInwi);
         chkPotOrange = viewGroup.findViewById(R.id.chkPotOrange);
@@ -152,7 +172,8 @@ public class UserGenInfo extends Fragment implements
                     activity.authorPot = authorMark.getText().toString();
                 }
 
-
+                //set Potence data
+                setPotenceData();
                 // set the dealler info
                 setDealerData();
                 // set the rechage data
@@ -166,25 +187,166 @@ public class UserGenInfo extends Fragment implements
                 Log.d("gen", "onClick: Telephony gamme "+activity.TelephonyGamme);
                 Log.d("gen", "onClick: Accessoire "+activity.Accessoire);
                 Log.d("gen", "onClick: Accessoire gamme "+activity.AccessoireGamme);
+
+                // check if the user clicked the button ont the first fragment and the uder info are valied
+                // and redy to be submitted to the server
+                if(isUserDateValide()){
+                    // data is ready to be submitted
+                    Toast.makeText(activity, "data submition", Toast.LENGTH_SHORT).show();
+                    //submitData();
+
+                    Toast.makeText(activity, "get your data", Toast.LENGTH_SHORT).show();
+                    Log.d("dealer", "onClick:dealer data "+getDealerAsString());
+                    Log.d("dealer", "onClick:recharge data "+getRechargeAsString());
+                    Log.d("dealer", "onClick:sims data "+getSimsAsString());
+                    Log.d("dealer", "onClick:mobile data "+getMobileMonyAsString());
+                    Log.d("dealer", "onClick:Telephony data "+getTelephonyAsString());
+                    Log.d("dealer", "onClick:Accessoir data "+getAccessoireAsString());
+                    Log.d("dealer", "onClick:Potence data "+getPotenceAsString());
+                    Log.d("dealer", "onClick:converted Image "+getPotenceAsString());
+
+
+                }else {
+                    // show message to user
+                    Toast.makeText(activity, "get your data", Toast.LENGTH_SHORT).show();
+                    Log.d("dealer", "onClick:dealer data "+getDealerAsString());
+                    Log.d("dealer", "onClick:recharge data "+getRechargeAsString());
+                    Log.d("dealer", "onClick:sims data "+getSimsAsString());
+                    Log.d("dealer", "onClick:mobile data "+getMobileMonyAsString());
+                    Log.d("dealer", "onClick:Telephony data "+getTelephonyAsString());
+                    Log.d("dealer", "onClick:Accessoir data "+getAccessoireAsString());
+                    Log.d("dealer", "onClick:Potence data "+getPotenceAsString());
+                }
             }
 
         });
         return viewGroup;
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        String checked = compoundButton.getText().toString();
-        if(compoundButton.getId() == R.id.chkPotIam || compoundButton.getId() == R.id.chkPotOrange || compoundButton.getId() == R.id.chkPotInwi
-        || compoundButton.getId() == R.id.chkPotTaba){
-            if(b){
-                activity.Potence.add(checked);
+    private boolean isUserDateValide() {
+        if(!activity.clientFullName.equals("") && !activity.clientLocation.equals("")
+                && !activity.clientPhoneNumber.equals("") && !activity.codeBarContent.equals("")
+        && activity.clientImage != null && !activity.clientAddress.equals("")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private String getDealerAsString(){
+        StringBuilder dealerString = new StringBuilder();
+
+        for (String[] d: activity.Dealers) {
+            for (String sVal:d) {
+                dealerString.append(sVal+",");
             }
-            else if(activity.Potence.contains(checked)){
-                activity.Potence.remove(checked);
+            dealerString.append(";");
+        }
+        String newDel = dealerString.toString().replace(",;",";").trim();
+        if(!newDel.equals("")){
+            newDel = newDel.substring(0,newDel.length()-1);
+            return newDel;
+        }
+        return null;
+    }
+
+    private String getRechargeAsString(){
+        StringBuilder rechargeString = new StringBuilder();
+
+        for (String[] d: activity.Rechargs) {
+            for (String sVal:d) {
+                rechargeString.append(sVal+",");
+            }
+            rechargeString.append(";");
+        }
+        String newRech = rechargeString.toString().replace(",;",";").trim();
+        if(!newRech.equals("")){
+            newRech = newRech.substring(0,newRech.length()-1);
+            return newRech;
+        }
+        return null;
+    }
+
+    private String getSimsAsString(){
+        StringBuilder simsString = new StringBuilder();
+
+        for (String[] d: activity.Sims) {
+            for (String sVal:d) {
+                simsString.append(sVal+",");
+            }
+            simsString.append(";");
+        }
+        String newSim = simsString.toString().replace(",;",";").trim();
+        if(!newSim.equals("")){
+            newSim = newSim.substring(0,newSim.length()-1);
+            return newSim;
+        }
+        return null;
+    }
+
+    private String getMobileMonyAsString(){
+        StringBuilder builder = new StringBuilder();
+        if(activity.MobileMonyInteress){
+            builder.append("true,");
+        }else {
+            builder.append("false,");
+        }
+
+        if(activity.MobileMonyPropose){
+            builder.append("true");
+        }else {
+            builder.append("false");
+        }
+        return builder.toString();
+    }
+
+    private String getTelephonyAsString(){
+        StringBuilder builder = new StringBuilder();
+        if(activity.Telephony){
+            builder.append("true,"+activity.TelephonyGamme);
+        }else {
+            builder.append("false,Non");
+        }
+        return builder.toString();
+    }
+
+    private String getAccessoireAsString(){
+        StringBuilder builder = new StringBuilder();
+        if(activity.Accessoire){
+            builder.append("true,"+activity.AccessoireGamme);
+        }else {
+            builder.append("false,Non");
+        }
+        return builder.toString();
+    }
+
+    private String getPotenceAsString(){
+        StringBuilder builder = new StringBuilder();
+        for (String p: activity.Potence) {
+            builder.append(p+",");
+        }
+        if(!activity.authorPot.equals("")){
+            if(activity.authorPot.split(",").length > 1){
+                for (String ap:activity.authorPot.split(",")) {
+                    builder.append(ap+",");
+                }
+            }else {
+                builder.append(activity.authorPot+",");
             }
         }
 
+        String newP = builder.toString().trim();
+        if(!newP.equals("")){
+            newP = newP.substring(0,newP.length()-1);
+            return newP;
+        }
+        return null;
+
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        String checked = compoundButton.getText().toString();
         if(compoundButton.getId() == R.id.chkHasIamDealer || compoundButton.getId() == R.id.chkHasInwiDealer ||
                 compoundButton.getId() == R.id.chkHasOrgDealer){
             if(b){
@@ -208,6 +370,22 @@ public class UserGenInfo extends Fragment implements
             }else {
                 desibleOptions(checked,"cim");
             }
+        }
+    }
+
+    private void setPotenceData(){
+        activity.Potence.clear();
+        if(chkPotInwi.isChecked()){
+            activity.Potence.add("Inwi");
+        }
+        if(chkPotOrange.isChecked()){
+            activity.Potence.add("Org");
+        }
+        if(chkPotIam.isChecked()){
+            activity.Potence.add("Iam");
+        }
+        if(chkPotTaba.isChecked()){
+            activity.Potence.add("Taba");
         }
     }
 
@@ -291,30 +469,32 @@ public class UserGenInfo extends Fragment implements
 
     private void setRechargeData(){
         String Rname ;
-        String Rqtemax = "0";
+        String RIamqtemax = "0";
+        String RInwoqtemax = "0";
+        String ROrgqtemax = "0";
         activity.Rechargs.clear();
         if(chkHasIamRecharge.isChecked()){
             Rname = "Iam";
             if(!edtIamRechargeMax.getText().toString().equals("")){
-                Rqtemax = edtIamRechargeMax.getText().toString();
+                RIamqtemax = edtIamRechargeMax.getText().toString();
             }
-            String[] val = new String[]{Rname,Rqtemax};
+            String[] val = new String[]{Rname,RIamqtemax};
             activity.Rechargs.add(val);
         }
         if(chkHasOrgRecharge.isChecked()){
             Rname = "Org";
             if(!edtOrgRechargeMax.getText().toString().equals("")){
-                Rqtemax = edtOrgRechargeMax.getText().toString();
+                RInwoqtemax = edtOrgRechargeMax.getText().toString();
             }
-            String[] val = new String[]{Rname,Rqtemax};
+            String[] val = new String[]{Rname,RInwoqtemax};
             activity.Rechargs.add(val);
         }
         if(chkHasInwiRecharge.isChecked()){
             Rname = "Inwi";
             if(!edtInwiRechargeMax.getText().toString().equals("")){
-                Rqtemax = edtInwiRechargeMax.getText().toString();
+                ROrgqtemax = edtInwiRechargeMax.getText().toString();
             }
-            String[] val = new String[]{Rname,Rqtemax};
+            String[] val = new String[]{Rname,ROrgqtemax};
             activity.Rechargs.add(val);
         }
     }
@@ -358,6 +538,7 @@ public class UserGenInfo extends Fragment implements
             activity.Sims.add(val);
         }
     }
+
 
     private void enableOptions(String type,String lay) {
         switch (type){
@@ -502,6 +683,77 @@ public class UserGenInfo extends Fragment implements
                     activity.AccessoireGamme = "Haut Gamme";
                 }
                 break;
+        }
+    }
+
+    public void submitData(){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, submitUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String message = jsonObject.getString("messgae");
+                    Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity, "Error,Please Try Again Later", Toast.LENGTH_LONG).show();
+                Log.d("err", "onErrorResponse: "+error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("clientName",activity.clientFullName);
+                params.put("clientCode",activity.codeBarContent);
+                params.put("clientPhone",activity.clientPhoneNumber);
+                params.put("clientAddr",activity.clientAddress);
+                params.put("clientEmail",activity.clientEmail);
+                params.put("clientPer",activity.clientPeriority ? "1" : "0");
+                params.put("clientSat",activity.clientSatisfacion ? "1" : "0");
+                params.put("clientCnss",activity.clientInterssCnss ? "1" : "0");
+                params.put("clientLoc",activity.clientLocation);
+                params.put("real_pic", BitmapHelper.convertBitmapToString(activity.clientImage));
+                //complex data
+                params.put("clientDealers",getDealerAsString() != null ? getDealerAsString() : "");
+                params.put("clientRecharge",getRechargeAsString() != null ? getRechargeAsString() : "");
+                params.put("clientSims",getSimsAsString() != null ? getSimsAsString() : "");
+                params.put("clientPot",getPotenceAsString() != null ? getPotenceAsString() : "");
+
+                params.put("clientMobile",getMobileMonyAsString());
+                params.put("clientTelephony",getTelephonyAsString());
+                params.put("clientAccessoire",getAccessoireAsString());
+
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
+    }
+
+    public class UploadTask extends AsyncTask<Void,Void,String>{
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            submitData();
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
         }
     }
 }

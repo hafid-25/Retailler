@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity
     private boolean isUserVond = false;
     private boolean isUserVis = false;
 
-    private String codeBarContent ="";
-    public Bitmap clientImage;
+    public String codeBarContent ="";
+    public Bitmap clientImage = null;
 
     public String clientFullName ="";
     public String clientPhoneNumber="";

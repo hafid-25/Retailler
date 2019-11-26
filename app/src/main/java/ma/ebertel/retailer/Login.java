@@ -43,6 +43,11 @@ public class Login extends AppCompatActivity {
         loginUsername = findViewById(R.id.loginUsername);
         sharedPreferences = this.getSharedPreferences(getString(R.string.shared_name), Context.MODE_PRIVATE);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         isUserAlreadyLoggedIn();
     }
 
@@ -85,6 +90,7 @@ public class Login extends AppCompatActivity {
                                 editor.commit();
                                 Intent loginIntent = new Intent(Login.this,MainActivity.class);
                                 startActivity(loginIntent );
+                                finish();
                             }
 
                         } catch (JSONException e) {
@@ -116,6 +122,7 @@ public class Login extends AppCompatActivity {
         if(login.equals("1")){
             Intent redirect = new Intent(Login.this,MainActivity.class);
             startActivity(redirect);
+            finish();
         }
 
     }

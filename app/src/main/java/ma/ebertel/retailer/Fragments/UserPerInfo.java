@@ -124,7 +124,7 @@ public class UserPerInfo extends Fragment implements
             }
         };
 
-        locationManager.requestLocationUpdates("gps", 0, 0,locationListener);
+        locationManager.requestLocationUpdates("gps", 500, 1,locationListener);
 
         return viewGroup;
     }
@@ -165,7 +165,7 @@ public class UserPerInfo extends Fragment implements
             activity.clientAddress = edtClientAddress.getText().toString();
         }
 
-        locationManager.requestLocationUpdates("gps", 0, 0,locationListener);
+        locationManager.requestLocationUpdates("gps", 500, 1,locationListener);
         activity.clientLocation = onlyOneLocation.getLatitude()+","+onlyOneLocation.getLongitude();
 
         activity.pager.setCurrentItem(1,true);
