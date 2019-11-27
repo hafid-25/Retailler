@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,11 +73,14 @@ public class UserPerInfo extends Fragment implements
     private LocationListener locationListener;
     private Location onlyOneLocation;
     private final int REQUEST_FINE_LOCATION = 1234;
+    private SharedPreferences sharedPreferences;
 
     private ImageView clientImage;
     private Bitmap myBitmap;
     private MainActivity activity;
     private RadioGroup rgPeriority, rgSatisfaction, rgInteressCnss;
+    private ViewGroup TakePicLayout;
+    private RadioButton btnPeriorityYes,btnPeriorityNo,btnSatisfactionYes,btnSatisfactionNo,btnInterestsNo,btnInterestsYes;
 
     private EditText edtClientName, edtClientTel, edtClientEmail, edtClientAddress;
     private Spinner spinnerRegion,spinnerCity;
@@ -97,6 +103,14 @@ public class UserPerInfo extends Fragment implements
 
         spinnerRegion = viewGroup.findViewById(R.id.spinnerRegion);
         spinnerCity = viewGroup.findViewById(R.id.spinnerCity);
+        TakePicLayout = viewGroup.findViewById(R.id.photo);
+        btnPeriorityYes = viewGroup.findViewById(R.id.btnPeriorityYes);
+        btnPeriorityNo = viewGroup.findViewById(R.id.btnPeriorityNo);
+        btnSatisfactionYes = viewGroup.findViewById(R.id.btnSatisfactionYes);
+        btnSatisfactionNo = viewGroup.findViewById(R.id.btnSatisfactionNo);
+        btnInterestsYes = viewGroup.findViewById(R.id.btnInterestsYes);
+        btnInterestsNo = viewGroup.findViewById(R.id.btnInterestsNo);
+        sharedPreferences = activity.getSharedPreferences(getString(R.string.shared_name), Context.MODE_PRIVATE);
         // create adapter for spinner region
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,activity.regionname);
         spinnerRegion.setAdapter(dataAdapter);
@@ -104,10 +118,12 @@ public class UserPerInfo extends Fragment implements
         spinnerRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                activity.selectedRegionCode = activity.regionCode.get(i);
-                spinnerCity.setAdapter(null);
-                activity.selectedCityCode = "";
-                getVills(activity.selectedRegionCode);
+                if(sharedPreferences.getString("role","0").equals("1")){
+                    activity.selectedRegionCode = activity.regionCode.get(i);
+                    spinnerCity.setAdapter(null);
+                    activity.selectedCityCode = "";
+                    getVills(activity.selectedRegionCode);
+                }
             }
 
             @Override
@@ -119,7 +135,9 @@ public class UserPerInfo extends Fragment implements
         spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                activity.selectedCityCode = activity.cityCode.get(i);
+                if(sharedPreferences.getString("role","0").equals("1")){
+                    activity.selectedCityCode = activity.cityCode.get(i);
+                }
             }
 
             @Override
@@ -177,7 +195,8 @@ public class UserPerInfo extends Fragment implements
         };
 
         locationManager.requestLocationUpdates("gps", 500, 1,locationListener);
-
+        desibleOptionsForVis();
+        getVisitorData();
         return viewGroup;
     }
 
@@ -198,7 +217,12 @@ public class UserPerInfo extends Fragment implements
                 openBackCamera(10);
                 break;
             case R.id.btnNextSlide:
-                saveDateAndSlide();
+                String role = sharedPreferences.getString("role","0");
+                if(role.equals("2")){
+                    activity.pager.setCurrentItem(1,true);
+                }else {
+                    saveDateAndSlide();
+                }
                 break;
         }
     }
@@ -330,7 +354,7 @@ public class UserPerInfo extends Fragment implements
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Connection Error", Toast.LENGTH_SHORT).show();
                 Log.d("err", "onErrorResponse: "+error.getMessage());
             }
         }){
@@ -344,6 +368,124 @@ public class UserPerInfo extends Fragment implements
         RequestQueue requestQueue = Volley.newRequestQueue(activity);
         requestQueue.add(stringRequest);
     }
+
+    private void  getVisitorData(){
+        // first check if the user type is visiture
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(getString(R.string.shared_name), Context.MODE_PRIVATE);
+        String role = sharedPreferences.getString("role","0");
+        if(role.equals("2")){
+            String visUrl = "http://hafid.skandev.com/get_vis_info.php";
+            // the role is visiture
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, visUrl, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Toast.makeText(activity, "Response is here", Toast.LENGTH_SHORT).show();
+                    JSONObject json;
+                    try {
+                        json = new JSONObject(response);
+                        JSONObject client = json.getJSONObject("client");
+                        setClientData(client);
+                        try{
+                            // for the case of one dealer
+                            activity.dealerJSonObject = json.getJSONObject("dealer");
+
+                        }catch (Exception ex){
+                            // for the case of more than one dealer
+                            activity.dealerJSonArray = json.getJSONArray("dealer");
+
+                        }
+                        //Log.d("json", "onResponse: "+dealer);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(activity, "Connection Error", Toast.LENGTH_SHORT).show();
+                }
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String,String> params = new HashMap<>();
+                    params.put("code",codeBare);
+                    return params;
+                }
+            };
+            RequestQueue requestQueue = Volley.newRequestQueue(activity);
+            requestQueue.add(stringRequest);
+        }else{
+            Toast.makeText(activity, "role is not 2", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void desibleOptionsForVis(){
+        String role = sharedPreferences.getString("role","0");
+        if(role.equals("2")){
+            TakePicLayout.setVisibility(View.GONE);
+            edtClientName.setEnabled(false);
+            edtClientEmail.setEnabled(false);
+            edtClientAddress.setEnabled(false);
+            edtClientTel.setEnabled(false);
+            btnPeriorityYes.setEnabled(false);
+            //btnPeriorityYes.setChecked(false);
+            btnPeriorityNo.setEnabled(false);
+            //btnPeriorityNo.setChecked(false);
+            btnSatisfactionYes.setEnabled(false);
+            //btnSatisfactionYes.setChecked(false);
+            btnSatisfactionNo.setEnabled(false);
+            //btnSatisfactionNo.setChecked(false);
+            btnInterestsYes.setEnabled(false);
+            //btnInterestsYes.setChecked(false);
+            btnInterestsNo.setEnabled(false);
+            //btnInterestsNo.setChecked(false);
+
+            spinnerCity.setEnabled(false);
+            spinnerRegion.setEnabled(false);
+        }
+    }
+
+    private void setClientData(JSONObject client){
+        try {
+            String clientname = client.getString("name");
+            edtClientName.setText(clientname);
+            edtClientAddress.setText(client.getString("address"));
+            edtClientTel.setText(client.getString("tel"));
+            edtClientEmail.setText(client.getString("email"));
+            activity.clientId = client.getString("id");
+
+            ArrayAdapter<String> regionAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,new String[]{client.getString("Region")});
+            spinnerRegion.setAdapter(regionAdapter);
+
+            ArrayAdapter<String> villeAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,new String[]{client.getString("ville")});
+            spinnerCity.setAdapter(villeAdapter);
+            if(client.getString("periority").equals("1")){
+                btnPeriorityYes.setChecked(true);
+                btnPeriorityNo.setChecked(false);
+            }else {
+                btnPeriorityNo.setChecked(true);
+                btnPeriorityYes.setChecked(false);
+            }
+            if(client.getString("satisfaction").equals("1")){
+                btnSatisfactionNo.setChecked(false);
+                btnSatisfactionYes.setChecked(true);
+            }else {
+                btnSatisfactionNo.setChecked(true);
+                btnSatisfactionYes.setChecked(false);
+            }
+            if(client.getString("cnss_interess").equals("1")){
+                btnInterestsYes.setChecked(true);
+                btnInterestsNo.setChecked(false);
+            }else {
+                btnInterestsYes.setChecked(false);
+                btnInterestsNo.setChecked(true);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 }

@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity
     public String codeBarContent ="";
     public Bitmap clientImage = null;
 
+    public String clientId = "";
     public String clientFullName ="";
     public String clientPhoneNumber="";
     public String clientEmail = "";
@@ -108,6 +109,10 @@ public class MainActivity extends AppCompatActivity
 
     public String selectedRegionCode = "";
     public String selectedCityCode = "";
+
+    // visiteur data
+    public JSONObject dealerJSonObject = null;
+    public JSONArray dealerJSonArray = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +166,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        Toast.makeText(this, "onstart", Toast.LENGTH_SHORT).show();
         super.onStart();
         if(codeBarContent.equals("")){
             getSupportFragmentManager().beginTransaction().replace(R.id.wrapper,new Home(this,sharedPreferences)).commit();
@@ -169,7 +173,10 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.wrapper,new Sealer(this,codeBarContent)).commit();
         }
         if(regionCode.size() == 0){
-            getRegions();
+            String role = sharedPreferences.getString("role","0");
+            if(role.equals("1")){
+                getRegions();
+            }
         }
     }
 
@@ -274,7 +281,7 @@ public class MainActivity extends AppCompatActivity
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, "error is here ", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Connection Error", Toast.LENGTH_LONG).show();
                 Log.d("error", "onErrorResponse: "+error);
             }
         }){
@@ -307,7 +314,7 @@ public class MainActivity extends AppCompatActivity
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
                 Log.d("err", "onErrorResponse: "+error.getMessage());
             }
         }){

@@ -1,5 +1,7 @@
 package ma.ebertel.retailer.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.style.TtsSpan;
@@ -24,9 +26,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,10 +60,17 @@ public class UserGenInfo extends Fragment implements
             ,edtOrgDealerMaxQte,edtInwiDealerMaxQte,edtIamDealerMaxQte
             ,edtOrgRechargeMax,edtInwiRechargeMax,edtIamRechargeMax
             ,edtOrgCimPrixu,edtInwiCimPrixu,edtIamCimPrixu
-            ,edtOrgCimMaxQte,edtInwiCimMaxQte,edtIamCimMaxQte;
+            ,edtOrgCimMaxQte,edtInwiCimMaxQte,edtIamCimMaxQte
+            ,edtVisRemark;
     public RadioGroup radioPropose,radioInterests,radioTelephony,TelephonyRadioGroup,radioAccessoir,AccessGammeRadioGroup;
     public RadioButton btnAccssBasGamme,btnAccessHautGamme
-                        ,btnTelHautGamme,btnTelBasGamme;
+                        ,btnTelHautGamme,btnTelBasGamme
+                        ,btnInterestsYes,btnInterestsNo
+                        ,btnProposeYes,btnProposeNo
+                        ,btnTelephonyNo,btnTelephonyYes
+                        ,btnAccessYes,btnAccessNo;
+
+    public SharedPreferences sharedPreferences;
 
     public String submitUrl = "http://hafid.skandev.com/addClient.php";
 
@@ -82,6 +94,7 @@ public class UserGenInfo extends Fragment implements
         btnAccessHautGamme = viewGroup.findViewById(R.id.btnAccessHautGamme);
         btnTelBasGamme = viewGroup.findViewById(R.id.btnTelBasGamme);
         btnTelHautGamme = viewGroup.findViewById(R.id.btnTelHautGamme);
+        edtVisRemark = viewGroup.findViewById(R.id.edtVisRemark);
 
         radioInterests.setOnCheckedChangeListener(this);
         radioPropose.setOnCheckedChangeListener(this);
@@ -140,6 +153,18 @@ public class UserGenInfo extends Fragment implements
 
         btnAddValidUser = viewGroup.findViewById(R.id.btnAddValidUser);
 
+        btnInterestsNo = viewGroup.findViewById(R.id.btnInterestsNo);
+        btnInterestsYes = viewGroup.findViewById(R.id.btnInterestsYes);
+        btnProposeNo = viewGroup.findViewById(R.id.btnProposeNo);
+        btnProposeYes = viewGroup.findViewById(R.id.btnProposeYes);
+
+        btnTelephonyYes = viewGroup.findViewById(R.id.btnTelephonyYes);
+        btnTelephonyNo = viewGroup.findViewById(R.id.btnTelephonyNo);
+
+        btnAccessNo = viewGroup.findViewById(R.id.btnAccessNo);
+        btnAccessYes = viewGroup.findViewById(R.id.btnAccessYes);
+
+
         authorMark = viewGroup.findViewById(R.id.authorMark);
 
         // potence listeners
@@ -168,6 +193,15 @@ public class UserGenInfo extends Fragment implements
         btnAddValidUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(sharedPreferences.getString("role","0").equals("2")){
+                    // add visiteur remark and return
+                    String remark = edtVisRemark.getText().toString();
+                    if(!remark.equals("") && !activity.clientId.equals("")){
+                        AddVisRemark(remark);
+                    }
+                    return;
+                }
+
                 if(!authorMark.getText().toString().equals("")){
                     activity.authorPot = authorMark.getText().toString();
                 }
@@ -180,14 +214,6 @@ public class UserGenInfo extends Fragment implements
                 setRechargeData();
                 // set the sims info
                 setSimsData();
-
-                Log.d("gen", "onClick: mobile mony inter "+activity.MobileMonyInteress);
-                Log.d("gen", "onClick: mobile mony prop "+activity.MobileMonyPropose);
-                Log.d("gen", "onClick: Telephony "+activity.Telephony);
-                Log.d("gen", "onClick: Telephony gamme "+activity.TelephonyGamme);
-                Log.d("gen", "onClick: Accessoire "+activity.Accessoire);
-                Log.d("gen", "onClick: Accessoire gamme "+activity.AccessoireGamme);
-
                 // check if the user clicked the button ont the first fragment and the uder info are valied
                 // and redy to be submitted to the server
                 if(isUserDateValide()){
@@ -195,32 +221,62 @@ public class UserGenInfo extends Fragment implements
                     Toast.makeText(activity, "data submition", Toast.LENGTH_SHORT).show();
                     submitData();
 
-                    Toast.makeText(activity, "get your data", Toast.LENGTH_SHORT).show();
-                    Log.d("dealer", "onClick:dealer data "+getDealerAsString());
-                    Log.d("dealer", "onClick:recharge data "+getRechargeAsString());
-                    Log.d("dealer", "onClick:sims data "+getSimsAsString());
-                    Log.d("dealer", "onClick:mobile data "+getMobileMonyAsString());
-                    Log.d("dealer", "onClick:Telephony data "+getTelephonyAsString());
-                    Log.d("dealer", "onClick:Accessoir data "+getAccessoireAsString());
-                    Log.d("dealer", "onClick:Potence data "+getPotenceAsString());
-                    Log.d("dealer", "onClick:converted Image "+getPotenceAsString());
-
-
                 }else {
                     // show message to user
-                    Toast.makeText(activity, "get your data", Toast.LENGTH_SHORT).show();
-                    Log.d("dealer", "onClick:dealer data "+getDealerAsString());
-                    Log.d("dealer", "onClick:recharge data "+getRechargeAsString());
-                    Log.d("dealer", "onClick:sims data "+getSimsAsString());
-                    Log.d("dealer", "onClick:mobile data "+getMobileMonyAsString());
-                    Log.d("dealer", "onClick:Telephony data "+getTelephonyAsString());
-                    Log.d("dealer", "onClick:Accessoir data "+getAccessoireAsString());
-                    Log.d("dealer", "onClick:Potence data "+getPotenceAsString());
+                    Toast.makeText(activity, "Please Check All Your Fields Something is Messing", Toast.LENGTH_SHORT).show();
                 }
             }
 
         });
+
+        sharedPreferences = activity.getSharedPreferences(getString(R.string.shared_name), Context.MODE_PRIVATE);
+        String role = sharedPreferences.getString("role","0");
+        if(role.equals("2")){
+            desibleOptionForVis();
+        }else if (role.equals("1")){
+
+        }
         return viewGroup;
+    }
+
+    private void AddVisRemark(final String remark) {
+        String remarkUrl = "http://hafid.skandev.com/addRemark.php";
+        StringRequest stringRequest= new StringRequest(Request.Method.POST, remarkUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String message = jsonObject.getString("message");
+                    if(message.equals("success")){
+                        activity.finish();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity, "Connection Error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("clientId",activity.clientId);
+                params.put("remark",remark);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getVisitorData();
     }
 
     private boolean isUserDateValide() {
@@ -703,7 +759,7 @@ public class UserGenInfo extends Fragment implements
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Error,Please Try Again Later", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Connection Error", Toast.LENGTH_LONG).show();
                 Log.d("err", "onErrorResponse: "+error.getMessage());
             }
         }){
@@ -745,22 +801,353 @@ public class UserGenInfo extends Fragment implements
         requestQueue.add(stringRequest);
     }
 
-    public class UploadTask extends AsyncTask<Void,Void,String>{
+    private void desibleOptionForVis(){
 
-        @Override
-        protected String doInBackground(Void... voids) {
-            submitData();
-            return null;
-        }
+        chkPotInwi.setEnabled(false);
+        chkPotOrange.setEnabled(false);
+        chkPotIam.setEnabled(false);
+        chkPotTaba.setEnabled(false);
+        chkHasOrgDealer.setEnabled(false);
+        chkHasInwiDealer.setEnabled(false);
+        chkHasIamDealer.setEnabled(false);
+        chkHasOrgRecharge.setEnabled(false);
+        chkHasIamRecharge.setEnabled(false);
+        chkHasOrgCim.setEnabled(false);
+        chkHasInwiCim.setEnabled(false);
+        chkHasIamCim.setEnabled(false);
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
+        btnTelephonyNo.setEnabled(false);
+        btnTelephonyNo.setChecked(false);
+        btnTelephonyYes.setEnabled(false);
+        btnTelephonyYes.setChecked(false);
+        // mobil mony
+        btnInterestsYes.setEnabled(false);
+        btnInterestsYes.setChecked(false);
+        btnInterestsNo.setEnabled(false);
+        btnInterestsNo.setChecked(false);
+        btnProposeYes.setChecked(false);
+        btnProposeYes.setEnabled(false);
+        btnProposeNo.setEnabled(false);
+        btnProposeNo.setChecked(false);
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        btnAccessNo.setChecked(false);
+        btnAccessNo.setEnabled(false);
+        btnAccessYes.setEnabled(false);
+        btnAccessYes.setChecked(false);
+
+        chkHasInwiRecharge.setEnabled(false);
+        chkHasInwiRecharge.setChecked(false);
+
+        authorMark.setEnabled(false);
+
+    }
+
+    private void setPotence(JSONArray jsonArray){
+        for(int i=0; i<jsonArray.length(); i++){
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                setPotence(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+    private void setPotence(JSONObject jsonObject){
+        try {
+            String d = jsonObject.getString("operateur");
+
+            switch (d){
+                case "Org":
+                    chkPotOrange.setChecked(true);
+                    break;
+                case "Iam":
+                    chkPotIam.setChecked(true);
+                    break;
+                case "Inwi":
+                    chkPotInwi.setChecked(true);
+                    break;
+                case "Taba":
+                    chkPotTaba.setChecked(true);
+                    break;
+                default:
+                    authorMark.setText(authorMark.getText()+" "+d);
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setDealer(JSONArray jsonArray){
+        for(int i=0;i<jsonArray.length();i++){
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                setDealer(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void setDealer(JSONObject jsonObject){
+        try {
+            String op = jsonObject.getString("operateur");
+            String activ = jsonObject.getString("activation");
+            String recharge = jsonObject.getString("recharge");
+            String adv = jsonObject.getString("avantageous");
+            String max = jsonObject.getString("numDealer");
+
+            switch (op){
+                case "Org":
+                    chkHasOrgDealer.setChecked(true);
+                    if(activ.equals("1")){
+                        chkHasOrgDealerActiva.setChecked(true);
+                    }
+                    if(recharge.equals("1")){
+                        chkHasOrgDealerRecharge.setChecked(true);
+                    }
+                    if(adv.equals("1")){
+                        chkHasOrgDealerAdv.setChecked(true);
+                    }
+                    if(!max.equals("")){
+                        edtOrgDealerMaxQte.setText(max);
+                    }
+                    break;
+                case "Iam":
+                    chkHasIamDealer.setChecked(true);
+                    if(activ.equals("1")){
+                        chkHasIamDealerActiva.setChecked(true);
+                    }
+                    if(recharge.equals("1")){
+                        chkHasIamDealerRecharge.setChecked(true);
+                    }
+                    if(adv.equals("1")){
+                        chkHasIamDealerAdv.setChecked(true);
+                    }
+                    if(!max.equals("")){
+                        edtIamDealerMaxQte.setText(max);
+                    }
+                    break;
+                case "Inwi":
+                    chkHasInwiDealer.setChecked(true);
+                    if(activ.equals("1")){
+                        chkHasInwiDealerActiva.setChecked(true);
+                    }
+                    if(recharge.equals("1")){
+                        chkHasInwiDealerRecharge.setChecked(true);
+                    }
+                    if(adv.equals("1")){
+                        chkHasInwiDealerAdv.setChecked(true);
+                    }
+                    if(!max.equals("")){
+                        edtInwiDealerMaxQte.setText(max);
+                    }
+                    break;
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setRecharge(JSONArray jsonArray){
+        for (int i=0;i<jsonArray.length();i++){
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                setRecharge(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void setRecharge(JSONObject jsonObject){
+        try {
+            String op = jsonObject.getString("operateur");
+            String max = jsonObject.getString("QteMax");
+            switch (op){
+                case "Org":
+                    chkHasOrgRecharge.setChecked(true);
+                    if(!max.equals("")){
+                        edtOrgRechargeMax.setText(max);
+                    }
+                    break;
+                case "Iam":
+                    chkHasIamRecharge.setChecked(true);
+                    if(!max.equals("")){
+                        edtIamRechargeMax.setText(max);
+                    }
+                    break;
+                case "Inwi":
+                    chkHasInwiRecharge.setChecked(true);
+                    if(!max.equals("")){
+                        edtInwiRechargeMax.setText(max);
+                    }
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setSim(JSONArray jsonArray){
+        for (int i=0;i<jsonArray.length();i++){
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                setSim(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void setSim(JSONObject jsonObject){
+        try {
+            String op = jsonObject.getString("operateur");
+            String pu = jsonObject.getString("prixU");
+            String max = jsonObject.getString("qteMax");
+
+            switch (op){
+                case "Org":
+                    chkHasOrgCim.setChecked(true);
+                    if(!max.equals("")){
+                        edtOrgCimMaxQte.setText(max);
+                    }
+                    if(!pu.equals("")){
+                        edtOrgCimPrixu.setText(pu);
+                    }
+                    break;
+                case "Iam":
+                    chkHasIamCim.setChecked(true);
+                    if(!max.equals("")){
+                        edtIamCimMaxQte.setText(max);
+                    }
+                    if(!pu.equals("")){
+                        edtIamCimPrixu.setText(pu);
+                    }
+                    break;
+                case "Inwi":
+                    chkHasInwiCim.setChecked(true);
+                    if(!max.equals("")){
+                        edtInwiCimMaxQte.setText(max);
+                    }
+                    if(!pu.equals("")){
+                        edtInwiCimPrixu.setText(pu);
+                    }
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setMobile(String mobileString){
+        //[{"idClient":1,"idMobileM":0,"interesse":1,"propose":1}]
+        String mobile = mobileString.replace("]","").replace("[","").
+                replace("{","").replace("}","");
+        String[] mobileParts = mobile.split(",");
+        for (String p: mobileParts) {
+            String[] parts = p.split(":");
+            switch (parts[0]){
+                case "interesse":
+                    Toast.makeText(activity, "interess found", Toast.LENGTH_SHORT).show();
+                    if(parts[1].equals("1")){
+                        btnInterestsYes.setChecked(true);
+                    }else {
+                        btnInterestsYes.setChecked(false);
+                    }
+                    break;
+                case "propose":
+                    Toast.makeText(activity, "props found", Toast.LENGTH_SHORT).show();
+                    if(parts[1].equals("1")){
+                        btnProposeYes.setChecked(true);
+                    }else {
+                        btnProposeYes.setChecked(false);
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void  getVisitorData(){
+        // first check if the user type is visiture
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(getString(R.string.shared_name), Context.MODE_PRIVATE);
+        String role = sharedPreferences.getString("role","0");
+        if(role.equals("2")){
+            String visUrl = "http://hafid.skandev.com/get_vis_info.php";
+            // the role is visiture
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, visUrl, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Toast.makeText(activity, "Response is here", Toast.LENGTH_SHORT).show();
+                    JSONObject json;
+                    try {
+                        json = new JSONObject(response);
+                        JSONObject client = json.getJSONObject("client");
+                        Log.d("json", "onResponse: "+json);
+                        try{
+                            // for the case of one dealer
+                            JSONObject jsonObject = json.getJSONObject("dealer");
+                            setPotence(jsonObject);
+                        }catch (Exception ex){
+                            // for the case of more than one dealer
+                            JSONArray jsonArray = json.getJSONArray("dealer");
+                            setPotence(jsonArray);
+                        }
+                        try{
+                            JSONObject jsonObject = json.getJSONObject("dealer");
+                            setDealer(jsonObject);
+                        }catch (Exception ex){
+                            JSONArray jsonArray = json.getJSONArray("dealer");
+                            setDealer(jsonArray);
+                        }
+                        try{
+                            JSONObject jsonObject = json.getJSONObject("recharge");
+                            setRecharge(jsonObject);
+                        }catch (Exception ex){
+                            JSONArray jsonArray = json.getJSONArray("recharge");
+                            setRecharge(jsonArray);
+                        }
+                        try{
+                            JSONObject jsonObject = json.getJSONObject("sims");
+                            setSim(jsonObject);
+                        }catch (Exception ex){
+                            JSONArray jsonArray = json.getJSONArray("sims");
+                            setSim(jsonArray);
+                        }
+                        try{
+                            String mobileString = json.getString("mobile");
+                            setMobile(mobileString);
+                            Toast.makeText(activity, "no error", Toast.LENGTH_SHORT).show();
+
+                        }catch (Exception ex){
+                            Toast.makeText(activity, "error", Toast.LENGTH_SHORT).show();
+                        }
+                        //Log.d("json", "onResponse: "+dealer);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(activity, "Connection Error", Toast.LENGTH_SHORT).show();
+                }
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String,String> params = new HashMap<>();
+                    params.put("code",activity.codeBarContent);
+                    return params;
+                }
+            };
+            RequestQueue requestQueue = Volley.newRequestQueue(activity);
+            requestQueue.add(stringRequest);
+        }else{
+            Toast.makeText(activity, "role is not 2", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
