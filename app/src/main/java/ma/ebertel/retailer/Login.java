@@ -1,7 +1,9 @@
 package ma.ebertel.retailer;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,16 +24,17 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import static android.app.PendingIntent.getActivity;
 
 public class Login extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private EditText loginUsername,loginPassword;
+
     public String loginUrl = "http://hafid.skandev.com/verifyLogin.php";
 
     @Override
@@ -42,16 +45,79 @@ public class Login extends AppCompatActivity {
         loginPassword = findViewById(R.id.loginPassword);
         loginUsername = findViewById(R.id.loginUsername);
         sharedPreferences = this.getSharedPreferences(getString(R.string.shared_name), Context.MODE_PRIVATE);
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
         isUserAlreadyLoggedIn();
     }
 
+    private void createDb(){
+        if(!sharedPreferences.getBoolean("database",false)){
+            //database = Room.databaseBuilder(getApplicationContext(),
+              //      RetailerDb.class, "retailer").allowMainThreadQueries().build();
+
+
+            String regions = readRegionFile();
+            String vills = readVilleFile();
+            if(regions != null){
+                Toast.makeText(this, "all the regions is here", Toast.LENGTH_LONG).show();
+                Log.d("file", "createDb: "+vills);
+            }else {
+                Toast.makeText(this, "the region file is null", Toast.LENGTH_LONG).show();
+            }
+
+
+            // add regions first
+            /*String[] regSpliter = regions.split(";");
+            for (String r:regSpliter) {
+                String[] regInfo = r.split(",");
+                Region region = new Region();
+                region.code = Integer.parseInt(regInfo[0]);
+                region.region = regInfo[1];
+                database.RegionDao().Insert(region);
+
+            }*/
+
+            //editor = sharedPreferences.edit();
+            //editor.putBoolean("database",true);
+            //editor.commit();
+        }
+    }
+
+    private String readRegionFile(){
+        try {
+            InputStream stream = getAssets().open("regions.txt");
+            int size = stream.available();
+            byte[] buffer = new byte[size];
+            stream.read(buffer);
+            return new String(buffer);
+        } catch (IOException e) {
+            Toast.makeText(this, "failed to read The File", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private String readVilleFile(){
+        try {
+            InputStream stream = getAssets().open("vills.txt");
+            int size = stream.available();
+            byte[] buffer = new byte[size];
+            stream.read(buffer);
+            return new String(buffer);
+        } catch (IOException e) {
+            Toast.makeText(this, "failed to read The File", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void Login(View view){
+        // read all the regions inside a database
+
         String username = loginUsername.getText().toString();
         String password = loginPassword.getText().toString();
         if(!username.equals("") && !password.equals("")){
@@ -116,6 +182,7 @@ public class Login extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
+
 
     private void isUserAlreadyLoggedIn() {
         String login = sharedPreferences.getString("login","0");

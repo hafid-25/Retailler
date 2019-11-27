@@ -193,7 +193,7 @@ public class UserGenInfo extends Fragment implements
                 if(isUserDateValide()){
                     // data is ready to be submitted
                     Toast.makeText(activity, "data submition", Toast.LENGTH_SHORT).show();
-                    //submitData();
+                    submitData();
 
                     Toast.makeText(activity, "get your data", Toast.LENGTH_SHORT).show();
                     Log.d("dealer", "onClick:dealer data "+getDealerAsString());
@@ -226,7 +226,8 @@ public class UserGenInfo extends Fragment implements
     private boolean isUserDateValide() {
         if(!activity.clientFullName.equals("") && !activity.clientLocation.equals("")
                 && !activity.clientPhoneNumber.equals("") && !activity.codeBarContent.equals("")
-        && activity.clientImage != null && !activity.clientAddress.equals("")){
+        && activity.clientImage != null && !activity.clientAddress.equals("")
+        && !activity.selectedCityCode.equals("") && !activity.selectedRegionCode.equals("")){
             return true;
         }else {
             return false;
@@ -719,6 +720,12 @@ public class UserGenInfo extends Fragment implements
                 params.put("clientCnss",activity.clientInterssCnss ? "1" : "0");
                 params.put("clientLoc",activity.clientLocation);
                 params.put("real_pic", BitmapHelper.convertBitmapToString(activity.clientImage));
+
+
+                params.put("clientCity", activity.selectedCityCode);
+                params.put("clientRegion", activity.selectedRegionCode);
+
+
                 //complex data
                 params.put("clientDealers",getDealerAsString() != null ? getDealerAsString() : "");
                 params.put("clientRecharge",getRechargeAsString() != null ? getRechargeAsString() : "");

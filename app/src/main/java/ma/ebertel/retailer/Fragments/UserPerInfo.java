@@ -20,11 +20,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,10 +36,25 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import ma.ebertel.retailer.Helpers.BitmapHelper;
 import ma.ebertel.retailer.MainActivity;
@@ -59,6 +77,7 @@ public class UserPerInfo extends Fragment implements
     private RadioGroup rgPeriority, rgSatisfaction, rgInteressCnss;
 
     private EditText edtClientName, edtClientTel, edtClientEmail, edtClientAddress;
+    private Spinner spinnerRegion,spinnerCity;
 
     private ImageButton btnNextSlide;
 
@@ -75,6 +94,39 @@ public class UserPerInfo extends Fragment implements
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.user_per_info, container, false);
         TextView txtCode = viewGroup.findViewById(R.id.txtScanCodeBar);
         clientImage = viewGroup.findViewById(R.id.clientImage);
+
+        spinnerRegion = viewGroup.findViewById(R.id.spinnerRegion);
+        spinnerCity = viewGroup.findViewById(R.id.spinnerCity);
+        // create adapter for spinner region
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,activity.regionname);
+        spinnerRegion.setAdapter(dataAdapter);
+
+        spinnerRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                activity.selectedRegionCode = activity.regionCode.get(i);
+                spinnerCity.setAdapter(null);
+                activity.selectedCityCode = "";
+                getVills(activity.selectedRegionCode);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                activity.selectedCityCode = activity.cityCode.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         rgPeriority = viewGroup.findViewById(R.id.rgPeriority);
         rgSatisfaction = viewGroup.findViewById(R.id.rgSatisfaction);
@@ -136,6 +188,7 @@ public class UserPerInfo extends Fragment implements
         if(myBitmap != null){
             clientImage.setImageBitmap(myBitmap);
         }
+
     }
 
     @Override
@@ -252,6 +305,44 @@ public class UserPerInfo extends Fragment implements
                 activity.clientInterssCnss = false;
                 break;
         }
+    }
+
+    private void getVills(final String region){
+        final String regionUrl = "http://hafid.skandev.com/getVille.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, regionUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    activity.cityCode.clear();
+                    activity.cityName.clear();
+                    for(int i=0;i< jsonArray.length();i++){
+                        activity.cityCode.add(jsonArray.getJSONObject(i).getString("code"));
+                        activity.cityName.add(jsonArray.getJSONObject(i).getString("ville"));
+                    }
+                    Toast.makeText(activity, "city count "+activity.cityName.size(), Toast.LENGTH_SHORT).show();
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item,activity.cityName);
+                    spinnerCity.setAdapter(dataAdapter);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity, "error", Toast.LENGTH_SHORT).show();
+                Log.d("err", "onErrorResponse: "+error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("region",region);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
     }
 
 

@@ -62,7 +62,7 @@ public class Scanner extends AppCompatActivity implements ZXingScannerView.Resul
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == CAMERA_CODE && permissions[0] == Manifest.permission.CAMERA && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        /*if(requestCode == CAMERA_CODE && permissions[0] == Manifest.permission.CAMERA && grantResults[0] == PackageManager.PERMISSION_GRANTED){
             Toast.makeText(this, "Camera Permission Granted", Toast.LENGTH_SHORT).show();
         }else if(requestCode == WRITE_CODE && permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED){
             Toast.makeText(this, "Write Permission Granted", Toast.LENGTH_SHORT).show();
@@ -70,7 +70,10 @@ public class Scanner extends AppCompatActivity implements ZXingScannerView.Resul
             Toast.makeText(this, "GPS Permission Granted", Toast.LENGTH_SHORT).show();
         }else {
             finish();
-        }
+        }*/
+        /*if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
+            finish();
+        }*/
     }
 
     @Override

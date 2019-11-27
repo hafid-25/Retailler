@@ -41,6 +41,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -99,6 +100,15 @@ public class MainActivity extends AppCompatActivity
 
     public String serverUrl = "http://hafid.skandev.com/addClient.php";
 
+    public List<String> regionCode = new ArrayList<>();
+    public List<String> regionname = new ArrayList<>();
+
+    public List<String> cityName = new ArrayList<>();
+    public List<String> cityCode = new ArrayList<>();
+
+    public String selectedRegionCode = "";
+    public String selectedCityCode = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,13 +161,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
+        Toast.makeText(this, "onstart", Toast.LENGTH_SHORT).show();
         super.onStart();
         if(codeBarContent.equals("")){
             getSupportFragmentManager().beginTransaction().replace(R.id.wrapper,new Home(this,sharedPreferences)).commit();
         }else {
             getSupportFragmentManager().beginTransaction().replace(R.id.wrapper,new Sealer(this,codeBarContent)).commit();
         }
-
+        if(regionCode.size() == 0){
+            getRegions();
+        }
     }
 
     @Override
@@ -270,6 +283,37 @@ public class MainActivity extends AppCompatActivity
                 Map<String,String> params = new HashMap<>();
                 params.put("name","hafid id-baha");
                 return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    private void getRegions(){
+        String regionUrl = "http://hafid.skandev.com/getRegions.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, regionUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    for(int i=0;i< jsonArray.length();i++){
+                        regionCode.add(jsonArray.getJSONObject(i).getString("code"));
+                        regionname.add(jsonArray.getJSONObject(i).getString("Region"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+                Log.d("err", "onErrorResponse: "+error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return super.getParams();
             }
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
