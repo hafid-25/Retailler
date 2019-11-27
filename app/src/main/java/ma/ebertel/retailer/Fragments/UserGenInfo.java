@@ -751,6 +751,9 @@ public class UserGenInfo extends Fragment implements
                     JSONObject jsonObject = new JSONObject(response);
                     String message = jsonObject.getString("messgae");
                     Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+                    if(message.equals("Client Added Successfully")){
+                        activity.finish();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
