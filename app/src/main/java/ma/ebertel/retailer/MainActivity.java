@@ -78,13 +78,13 @@ public class MainActivity extends AppCompatActivity
     public String clientCity="";
     public String clientRegion = "";
     public String clientAddress = "";
+    public String clientType="";
     public boolean clientPeriority = true;
     public boolean clientSatisfacion = true;
     public boolean clientInterssCnss = true;
     public String clientLocation = "";
 
     public List<String> Potence = new ArrayList<>();
-    public String authorPot = "";
 
     public List<String[]> Dealers = new ArrayList<>();
     public List<String[]> Rechargs = new ArrayList<>();
@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity
 
     public boolean MobileMonyInteress = true;
     public boolean MobileMonyPropose  = true;
+    public String MobileMonnyType = "";
 
     public boolean Telephony = false;
     public String TelephonyGamme = "Bas Gamme";

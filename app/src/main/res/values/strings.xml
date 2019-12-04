@@ -24,10 +24,10 @@
     <string name="btn_take_pic_text">Take Picture</string>
     <string name="btn_text_yes">Yes</string>
     <string name="btn_text_no">No</string>
-    <string name="periority_title_text">Periority</string>
+    <string name="periority_title_text">Propriétaire</string>
     <string name="satisfaction_title_text">Satisfaction</string>
     <string name="interests_title_text">Interesse Assurance Maladie Et CNSS</string>
-    <string name="marks_title_text">Potence</string>
+    <string name="marks_title_text">Visibilité</string>
     <string name="check_text_inwi">Inwi</string>
     <string name="check_text_orng">Orng</string>
     <string name="check_text_iam">Iam</string>
@@ -64,6 +64,12 @@
     <string name="btn_login_title">Login</string>
     <string name="shared_name">retailer</string>
     <string name="text_remark_title">Remark</string>
+    <string name="local_title_text">Localisation Gps</string>
+    <string name="btn_local_text">Get Client Localisation</string>
+    <string name="clientType_title_text">Nature Reteal</string>
+    <string name="rechareg_express_text">Express</string>
+    <string name="rechrge_grattage_text">Grattage</string>
+    <string name="rechareg_chefredaffaire_text">Chefre</string>
 
 
 </resources>

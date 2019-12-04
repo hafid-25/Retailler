@@ -9,12 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,7 +38,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ma.ebertel.retailer.Helpers.BitmapHelper;
@@ -48,17 +53,17 @@ public class UserGenInfo extends Fragment implements
         RadioGroup.OnCheckedChangeListener {
 
     MainActivity activity;
-    public CheckBox chkPotInwi,chkPotOrange,chkPotIam,chkPotTaba
+    public CheckBox chkPotInwi,chkPotOrange,chkPotIam
             ,chkHasOrgDealer,chkHasInwiDealer,chkHasIamDealer
             ,chkHasOrgDealerActiva,chkHasInwiDealerActiva,chkHasIamDealerActiva
             ,chkHasOrgDealerRecharge,chkHasInwiDealerRecharge,chkHasIamDealerRecharge
             ,chkHasOrgDealerAdv,chkHasInwiDealerAdv,chkHasIamDealerAdv
             ,chkHasOrgRecharge,chkHasInwiRecharge,chkHasIamRecharge
+            ,chkHasOrgRechargeExp,chkHasInwiRechargeExp,chkHasIamRechargeExp
+            ,chkHasOrgRechargeGra,chkHasInwiRechargeGra,chkHasIamRechargeGra
             ,chkHasOrgCim,chkHasInwiCim,chkHasIamCim;
     public Button btnAddValidUser;
-    public EditText authorMark
-            ,edtOrgDealerMaxQte,edtInwiDealerMaxQte,edtIamDealerMaxQte
-            ,edtOrgRechargeMax,edtInwiRechargeMax,edtIamRechargeMax
+    public EditText edtOrgDealerMaxQte,edtInwiDealerMaxQte,edtIamDealerMaxQte
             ,edtOrgCimPrixu,edtInwiCimPrixu,edtIamCimPrixu
             ,edtOrgCimMaxQte,edtInwiCimMaxQte,edtIamCimMaxQte
             ,edtVisRemark;
@@ -69,6 +74,14 @@ public class UserGenInfo extends Fragment implements
                         ,btnProposeYes,btnProposeNo
                         ,btnTelephonyNo,btnTelephonyYes
                         ,btnAccessYes,btnAccessNo;
+    public Spinner OrgRechargeChefre,InwiRechargeChefre,IamRechargeChefre
+                ,mobileMoneyTypeList,authorMarksList;
+    public String rechargeIamChifre="",rechargeInwiChifre="",rechargeOrgChifre="",mobileMonnyType="",auhtorMark="";
+    public String[] chifers;
+    public List<String> mobiles;
+    public List<String> Markes;
+
+    public ViewGroup remarks;
 
     public SharedPreferences sharedPreferences;
 
@@ -89,6 +102,7 @@ public class UserGenInfo extends Fragment implements
         TelephonyRadioGroup = viewGroup.findViewById(R.id.TelephonyRadioGroup);
         radioAccessoir = viewGroup.findViewById(R.id.radioAccessoir);
         AccessGammeRadioGroup = viewGroup.findViewById(R.id.AccessGammeRadioGroup);
+        remarks = viewGroup.findViewById(R.id.remarks);
 
         btnAccssBasGamme = viewGroup.findViewById(R.id.btnAccssBasGamme);
         btnAccessHautGamme = viewGroup.findViewById(R.id.btnAccessHautGamme);
@@ -106,7 +120,6 @@ public class UserGenInfo extends Fragment implements
         chkPotInwi = viewGroup.findViewById(R.id.chkPotInwi);
         chkPotOrange = viewGroup.findViewById(R.id.chkPotOrange);
         chkPotIam = viewGroup.findViewById(R.id.chkPotIam);
-        chkPotTaba = viewGroup.findViewById(R.id.chkPotTaba);
         // dealers
         chkHasIamDealer = viewGroup.findViewById(R.id.chkHasIamDealer);
         chkHasInwiDealer = viewGroup.findViewById(R.id.chkHasInwiDealer);
@@ -132,10 +145,64 @@ public class UserGenInfo extends Fragment implements
         chkHasOrgRecharge = viewGroup.findViewById(R.id.chkHasOrgRecharge);
         chkHasInwiRecharge = viewGroup.findViewById(R.id.chkHasInwiRecharge);
         chkHasIamRecharge = viewGroup.findViewById(R.id.chkHasIamRecharge);
-        // recharge max qte
-        edtOrgRechargeMax = viewGroup.findViewById(R.id.edtOrgRechargeMax);
-        edtInwiRechargeMax = viewGroup.findViewById(R.id.edtInwiRechargeMax);
-        edtIamRechargeMax = viewGroup.findViewById(R.id.edtIamRechargeMax);
+        // recharge chifre d'affaire
+        OrgRechargeChefre = viewGroup.findViewById(R.id.OrgRechargeChefre);
+        InwiRechargeChefre = viewGroup.findViewById(R.id.InwiRechargeChefre);
+        IamRechargeChefre = viewGroup.findViewById(R.id.IamRechargeChefre);
+        // desible all the chifre spinners
+        OrgRechargeChefre.setEnabled(false);
+        InwiRechargeChefre.setEnabled(false);
+        IamRechargeChefre.setEnabled(false);
+
+        chifers = new String[]{"1000-5000","5000-10000",">10000"};
+        // set recharge spinner adapters
+        ArrayAdapter<String> rechargeAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,
+                chifers);
+        OrgRechargeChefre.setAdapter(rechargeAdapter);
+        InwiRechargeChefre.setAdapter(rechargeAdapter);
+        IamRechargeChefre.setAdapter(rechargeAdapter);
+
+        // set onccheckLiteners
+        OrgRechargeChefre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                rechargeOrgChifre =  chifers[i];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        InwiRechargeChefre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                rechargeInwiChifre =  chifers[i];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        IamRechargeChefre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                rechargeIamChifre =  chifers[i];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+        // rechareg express
+        chkHasIamRechargeExp = viewGroup.findViewById(R.id.chkHasIamRechargeExp);
+        chkHasOrgRechargeExp = viewGroup.findViewById(R.id.chkHasOrgRechargeExp);
+        chkHasInwiRechargeExp = viewGroup.findViewById(R.id.chkHasInwiRechargeExp);
+        // recharge car
+        chkHasOrgRechargeGra = viewGroup.findViewById(R.id.chkHasOrgRechargeGra);
+        chkHasInwiRechargeGra = viewGroup.findViewById(R.id.chkHasInwiRechargeGra);
+        chkHasIamRechargeGra = viewGroup.findViewById(R.id.chkHasIamRechargeGra);
 
         // cims
         chkHasOrgCim = viewGroup.findViewById(R.id.chkHasOrgCim);
@@ -164,14 +231,10 @@ public class UserGenInfo extends Fragment implements
         btnAccessNo = viewGroup.findViewById(R.id.btnAccessNo);
         btnAccessYes = viewGroup.findViewById(R.id.btnAccessYes);
 
-
-        authorMark = viewGroup.findViewById(R.id.authorMark);
-
         // potence listeners
         chkPotInwi.setOnCheckedChangeListener(this);
         chkPotOrange.setOnCheckedChangeListener(this);
         chkPotIam.setOnCheckedChangeListener(this);
-        chkPotTaba.setOnCheckedChangeListener(this);
         // dealers
         chkHasIamDealer.setOnCheckedChangeListener(this);
         chkHasInwiDealer.setOnCheckedChangeListener(this);
@@ -180,6 +243,7 @@ public class UserGenInfo extends Fragment implements
         chkHasOrgRecharge.setOnCheckedChangeListener(this);
         chkHasInwiRecharge.setOnCheckedChangeListener(this);
         chkHasIamRecharge.setOnCheckedChangeListener(this);
+
         // cims
         chkHasOrgCim.setOnCheckedChangeListener(this);
         chkHasInwiCim.setOnCheckedChangeListener(this);
@@ -189,6 +253,55 @@ public class UserGenInfo extends Fragment implements
         chkHasOrgDealerActiva.setOnCheckedChangeListener(this);
         chkHasInwiDealerActiva.setOnCheckedChangeListener(this);
         chkHasIamDealerActiva.setOnCheckedChangeListener(this);
+
+        // potence or visibility spinner
+        authorMarksList = viewGroup.findViewById(R.id.authorMarksList);
+
+        Markes = new ArrayList<>();
+        Markes.add("");
+        authorMarksList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                auhtorMark = Markes.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        // mobile monny spinner
+        mobileMoneyTypeList = viewGroup.findViewById(R.id.mobileMoneyTypeList);
+        //todo get mobile mony from database
+        mobiles = new ArrayList<>();
+        mobiles.add("");
+
+        mobileMoneyTypeList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mobileMonnyType = mobiles.get(i);
+                activity.MobileMonnyType = mobileMonnyType;
+                if(mobileMonnyType.equals("")){
+                    // deactivate all the radio buttons
+                    btnInterestsYes.setEnabled(false);
+                    btnInterestsNo.setEnabled(false);
+                    btnProposeYes.setEnabled(false);
+                    btnProposeNo.setEnabled(false);
+                }else {
+                    // reactivate all the authir radio buttons
+                    btnInterestsYes.setEnabled(true);
+                    btnInterestsNo.setEnabled(true);
+                    btnProposeYes.setEnabled(true);
+                    btnProposeNo.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         btnAddValidUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,10 +313,6 @@ public class UserGenInfo extends Fragment implements
                         AddVisRemark(remark);
                     }
                     return;
-                }
-
-                if(!authorMark.getText().toString().equals("")){
-                    activity.authorPot = authorMark.getText().toString();
                 }
 
                 //set Potence data
@@ -225,7 +334,11 @@ public class UserGenInfo extends Fragment implements
                     // show message to user
                     Toast.makeText(activity, "Please Check All Your Fields Something is Messing", Toast.LENGTH_SHORT).show();
                 }
+                Log.d("data", "onClick: recharge "+getRechargeAsString());
+                Log.d("data", "onClick: potence "+getPotenceAsString());
+                Log.d("data", "onClick: mobile monny "+getMobileMonyAsString());
             }
+
 
         });
 
@@ -233,8 +346,12 @@ public class UserGenInfo extends Fragment implements
         String role = sharedPreferences.getString("role","0");
         if(role.equals("2")){
             desibleOptionForVis();
+            remarks.setVisibility(View.VISIBLE);
         }else if (role.equals("1")){
-
+            // hide the remark layout
+            remarks.setVisibility(View.GONE);
+            getMarks();
+            getMobiles();
         }
         return viewGroup;
     }
@@ -283,7 +400,8 @@ public class UserGenInfo extends Fragment implements
         if(!activity.clientFullName.equals("") && !activity.clientLocation.equals("")
                 && !activity.clientPhoneNumber.equals("") && !activity.codeBarContent.equals("")
         && activity.clientImage != null && !activity.clientAddress.equals("")
-        && !activity.selectedCityCode.equals("") && !activity.selectedRegionCode.equals("")){
+        && !activity.selectedCityCode.equals("") && !activity.selectedRegionCode.equals("")
+        && !activity.clientType.equals("")){
             return true;
         }else {
             return false;
@@ -343,17 +461,23 @@ public class UserGenInfo extends Fragment implements
 
     private String getMobileMonyAsString(){
         StringBuilder builder = new StringBuilder();
-        if(activity.MobileMonyInteress){
-            builder.append("true,");
+        if(!activity.MobileMonnyType.equals("")){
+            builder.append(activity.MobileMonnyType+",");
+            if(activity.MobileMonyInteress){
+                builder.append("true,");
+            }else {
+                builder.append("false,");
+            }
+
+            if(activity.MobileMonyPropose){
+                builder.append("true");
+            }else {
+                builder.append("false");
+            }
         }else {
-            builder.append("false,");
+            builder.append("");
         }
 
-        if(activity.MobileMonyPropose){
-            builder.append("true");
-        }else {
-            builder.append("false");
-        }
         return builder.toString();
     }
 
@@ -382,15 +506,7 @@ public class UserGenInfo extends Fragment implements
         for (String p: activity.Potence) {
             builder.append(p+",");
         }
-        if(!activity.authorPot.equals("")){
-            if(activity.authorPot.split(",").length > 1){
-                for (String ap:activity.authorPot.split(",")) {
-                    builder.append(ap+",");
-                }
-            }else {
-                builder.append(activity.authorPot+",");
-            }
-        }
+        //todo add the select potence from the spinner
 
         String newP = builder.toString().trim();
         if(!newP.equals("")){
@@ -441,8 +557,8 @@ public class UserGenInfo extends Fragment implements
         if(chkPotIam.isChecked()){
             activity.Potence.add("Iam");
         }
-        if(chkPotTaba.isChecked()){
-            activity.Potence.add("Taba");
+        if(!auhtorMark.equals("")){
+            activity.Potence.add(auhtorMark);
         }
     }
 
@@ -526,32 +642,49 @@ public class UserGenInfo extends Fragment implements
 
     private void setRechargeData(){
         String Rname ;
-        String RIamqtemax = "0";
-        String RInwoqtemax = "0";
-        String ROrgqtemax = "0";
+        // recharge express data
+        String RIamExp = "0";
+        String ROrgExp = "0";
+        String RInwiExp = "0";
+        // recharge grattage data
+        String RIamGra = "0";
+        String ROrgGra = "0";
+        String RInwiGra = "0";
         activity.Rechargs.clear();
         if(chkHasIamRecharge.isChecked()){
             Rname = "Iam";
-            if(!edtIamRechargeMax.getText().toString().equals("")){
-                RIamqtemax = edtIamRechargeMax.getText().toString();
+            if(chkHasIamRechargeExp.isChecked()){
+                RIamExp = "1";
             }
-            String[] val = new String[]{Rname,RIamqtemax};
+            if(chkHasIamRechargeGra.isChecked()){
+                RIamGra = "1";
+            }
+
+            String[] val = new String[]{Rname,RIamExp,RIamGra,rechargeIamChifre};
             activity.Rechargs.add(val);
         }
         if(chkHasOrgRecharge.isChecked()){
             Rname = "Org";
-            if(!edtOrgRechargeMax.getText().toString().equals("")){
-                RInwoqtemax = edtOrgRechargeMax.getText().toString();
+            if(chkHasOrgRechargeExp.isChecked()){
+                ROrgExp = "1";
             }
-            String[] val = new String[]{Rname,RInwoqtemax};
+            if(chkHasOrgRechargeGra.isChecked()){
+                ROrgGra = "1";
+            }
+
+            String[] val = new String[]{Rname,ROrgExp,ROrgGra,rechargeOrgChifre};
             activity.Rechargs.add(val);
         }
         if(chkHasInwiRecharge.isChecked()){
             Rname = "Inwi";
-            if(!edtInwiRechargeMax.getText().toString().equals("")){
-                ROrgqtemax = edtInwiRechargeMax.getText().toString();
+            if(chkHasInwiRechargeExp.isChecked()){
+                RInwiExp = "1";
             }
-            String[] val = new String[]{Rname,ROrgqtemax};
+            if(chkHasInwiRechargeGra.isChecked()){
+                RInwiGra = "1";
+            }
+
+            String[] val = new String[]{Rname,RInwiExp,RInwiGra,rechargeInwiChifre};
             activity.Rechargs.add(val);
         }
     }
@@ -596,7 +729,6 @@ public class UserGenInfo extends Fragment implements
         }
     }
 
-
     private void enableOptions(String type,String lay) {
         switch (type){
             case "Orng":
@@ -606,7 +738,9 @@ public class UserGenInfo extends Fragment implements
                     chkHasOrgDealerRecharge.setEnabled(true);
                     edtOrgDealerMaxQte.setEnabled(true);
                 }else if (lay.equals("rech")){
-                    edtOrgRechargeMax.setEnabled(true);
+                    chkHasOrgRechargeExp.setEnabled(true);
+                    chkHasOrgRechargeGra.setEnabled(true);
+                    OrgRechargeChefre.setEnabled(true);
                 }else if (lay.equals("cim")){
                     edtOrgCimMaxQte.setEnabled(true);
                     edtOrgCimPrixu.setEnabled(true);
@@ -619,7 +753,9 @@ public class UserGenInfo extends Fragment implements
                     chkHasInwiDealerRecharge.setEnabled(true);
                     edtInwiDealerMaxQte.setEnabled(true);
                 }else if (lay.equals("rech")){
-                    edtInwiRechargeMax.setEnabled(true);
+                    chkHasInwiRechargeExp.setEnabled(true);
+                    chkHasInwiRechargeGra.setEnabled(true);
+                    InwiRechargeChefre.setEnabled(true);
                 }else if (lay.equals("cim")){
                     edtInwiCimMaxQte.setEnabled(true);
                     edtInwiCimPrixu.setEnabled(true);
@@ -632,7 +768,9 @@ public class UserGenInfo extends Fragment implements
                     chkHasIamDealerRecharge.setEnabled(true);
                     edtIamDealerMaxQte.setEnabled(true);
                 }else if (lay.equals("rech")){
-                    edtIamRechargeMax.setEnabled(true);
+                    chkHasIamRechargeExp.setEnabled(true);
+                    chkHasIamRechargeGra.setEnabled(true);
+                    IamRechargeChefre.setEnabled(true);
                 }else if (lay.equals("cim")){
                     edtIamCimMaxQte.setEnabled(true);
                     edtIamCimPrixu.setEnabled(true);
@@ -650,7 +788,9 @@ public class UserGenInfo extends Fragment implements
                     chkHasOrgDealerRecharge.setEnabled(false);
                     edtOrgDealerMaxQte.setEnabled(false);
                 }else if (lay.equals("rech")){
-                    edtOrgRechargeMax.setEnabled(false);
+                    chkHasOrgRechargeExp.setEnabled(false);
+                    chkHasOrgRechargeGra.setEnabled(false);
+                    OrgRechargeChefre.setEnabled(false);
                 }else if (lay.equals("cim")){
                     edtOrgCimMaxQte.setEnabled(false);
                     edtOrgCimPrixu.setEnabled(false);
@@ -663,7 +803,9 @@ public class UserGenInfo extends Fragment implements
                     chkHasInwiDealerRecharge.setEnabled(false);
                     edtInwiDealerMaxQte.setEnabled(false);
                 }else if (lay.equals("rech")){
-                    edtInwiRechargeMax.setEnabled(false);
+                    chkHasInwiRechargeExp.setEnabled(false);
+                    chkHasInwiRechargeGra.setEnabled(false);
+                    InwiRechargeChefre.setEnabled(false);
                 }else if (lay.equals("cim")){
                     edtInwiCimMaxQte.setEnabled(false);
                     edtInwiCimPrixu.setEnabled(false);
@@ -676,7 +818,9 @@ public class UserGenInfo extends Fragment implements
                     chkHasIamDealerRecharge.setEnabled(false);
                     edtIamDealerMaxQte.setEnabled(false);
                 }else if (lay.equals("rech")){
-                    edtIamRechargeMax.setEnabled(false);
+                    chkHasIamRechargeExp.setEnabled(false);
+                    chkHasIamRechargeGra.setEnabled(false);
+                    IamRechargeChefre.setEnabled(false);
                 }else if (lay.equals("cim")){
                     edtIamCimMaxQte.setEnabled(false);
                     edtIamCimPrixu.setEnabled(false);
@@ -762,7 +906,7 @@ public class UserGenInfo extends Fragment implements
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Connection Error", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Connection Error Or This Client Is Already Exists", Toast.LENGTH_LONG).show();
                 Log.d("err", "onErrorResponse: "+error.getMessage());
             }
         }){
@@ -779,6 +923,7 @@ public class UserGenInfo extends Fragment implements
                 params.put("clientCnss",activity.clientInterssCnss ? "1" : "0");
                 params.put("clientLoc",activity.clientLocation);
                 params.put("real_pic", BitmapHelper.convertBitmapToString(activity.clientImage));
+                params.put("type", activity.clientType);
 
 
                 params.put("clientCity", activity.selectedCityCode);
@@ -809,7 +954,6 @@ public class UserGenInfo extends Fragment implements
         chkPotInwi.setEnabled(false);
         chkPotOrange.setEnabled(false);
         chkPotIam.setEnabled(false);
-        chkPotTaba.setEnabled(false);
         chkHasOrgDealer.setEnabled(false);
         chkHasInwiDealer.setEnabled(false);
         chkHasIamDealer.setEnabled(false);
@@ -841,7 +985,7 @@ public class UserGenInfo extends Fragment implements
         chkHasInwiRecharge.setEnabled(false);
         chkHasInwiRecharge.setChecked(false);
 
-        authorMark.setEnabled(false);
+        // todo desible all the new added op for the vis
 
     }
 
@@ -870,11 +1014,8 @@ public class UserGenInfo extends Fragment implements
                 case "Inwi":
                     chkPotInwi.setChecked(true);
                     break;
-                case "Taba":
-                    chkPotTaba.setChecked(true);
-                    break;
                 default:
-                    authorMark.setText(authorMark.getText()+" "+d);
+                    // todo set the spinner text
                     break;
             }
         } catch (JSONException e) {
@@ -973,19 +1114,19 @@ public class UserGenInfo extends Fragment implements
                 case "Org":
                     chkHasOrgRecharge.setChecked(true);
                     if(!max.equals("")){
-                        edtOrgRechargeMax.setText(max);
+                        // todo set recharge data
                     }
                     break;
                 case "Iam":
                     chkHasIamRecharge.setChecked(true);
                     if(!max.equals("")){
-                        edtIamRechargeMax.setText(max);
+                        // todo set recharge data
                     }
                     break;
                 case "Inwi":
                     chkHasInwiRecharge.setChecked(true);
                     if(!max.equals("")){
-                        edtInwiRechargeMax.setText(max);
+                        // todo set recharge data
                     }
                     break;
             }
@@ -1151,6 +1292,77 @@ public class UserGenInfo extends Fragment implements
         }else{
             Toast.makeText(activity, "role is not 2", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void getMarks(){
+        final String typesUrl = "http://hafid.skandev.com/getVisibility.php";
+
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.POST, typesUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray json = new JSONArray(response);
+                    for(int i=0;i<json.length();i++){
+                        String lib = json.getJSONObject(i).getString("Libelle").toLowerCase();
+                        if(!lib.equals("iam") && !lib.equals("inwi") && !lib.equals("org")){
+                            Markes.add(lib);
+                        }
+                    }
+                    ArrayAdapter<String> MarkAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item,
+                            Markes);
+                    authorMarksList.setAdapter(MarkAdapter);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("clientType", "onResponse: success");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity, "Connection Error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return super.getParams();
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
+    }
+
+    private void getMobiles(){
+        final String typesUrl = "http://hafid.skandev.com/getMobile.php";
+
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.POST, typesUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray json = new JSONArray(response);
+                    for(int i=0;i<json.length();i++){
+                        mobiles.add(json.getJSONObject(i).getString("operateur"));
+                    }
+                    ArrayAdapter<String> mobileAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item,
+                            mobiles);
+                    mobileMoneyTypeList.setAdapter(mobileAdapter);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("clientType", "onResponse: success");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity, "Connection Error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return super.getParams();
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
     }
 
 }

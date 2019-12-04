@@ -83,9 +83,13 @@ public class UserPerInfo extends Fragment implements
     private RadioButton btnPeriorityYes,btnPeriorityNo,btnSatisfactionYes,btnSatisfactionNo,btnInterestsNo,btnInterestsYes;
 
     private EditText edtClientName, edtClientTel, edtClientEmail, edtClientAddress;
-    private Spinner spinnerRegion,spinnerCity;
+    private Spinner spinnerRegion,spinnerCity,clientTypeList;
+
+    private List<String> clientTypes, clientTypesIds;
 
     private ImageButton btnNextSlide;
+    private Button btnGetClientLocal,btnTakeClientPic;
+    private TextView txtLocalGps,txtCode;
 
     public UserPerInfo(String Code, MainActivity activity) {
         this.codeBare = Code;
@@ -98,7 +102,7 @@ public class UserPerInfo extends Fragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.user_per_info, container, false);
-        TextView txtCode = viewGroup.findViewById(R.id.txtScanCodeBar);
+        txtCode = viewGroup.findViewById(R.id.txtScanCodeBar);
         clientImage = viewGroup.findViewById(R.id.clientImage);
 
         spinnerRegion = viewGroup.findViewById(R.id.spinnerRegion);
@@ -114,7 +118,6 @@ public class UserPerInfo extends Fragment implements
         // create adapter for spinner region
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,activity.regionname);
         spinnerRegion.setAdapter(dataAdapter);
-
         spinnerRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -146,18 +149,34 @@ public class UserPerInfo extends Fragment implements
             }
         });
 
+        clientTypeList = viewGroup.findViewById(R.id.clientTypeList);
+        clientTypeList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                activity.clientType = clientTypesIds.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         rgPeriority = viewGroup.findViewById(R.id.rgPeriority);
         rgSatisfaction = viewGroup.findViewById(R.id.rgSatisfaction);
         rgInteressCnss = viewGroup.findViewById(R.id.rgInteressCnss);
 
         btnNextSlide = viewGroup.findViewById(R.id.btnNextSlide);
 
-        Button btnTakeClientPic = viewGroup.findViewById(R.id.btnTakeClientPic);
+        btnTakeClientPic = viewGroup.findViewById(R.id.btnTakeClientPic);
+        btnGetClientLocal = viewGroup.findViewById(R.id.btnGetClientLocal);
 
         edtClientName = viewGroup.findViewById(R.id.clientName);
         edtClientTel = viewGroup.findViewById(R.id.clientTel);
         edtClientEmail = viewGroup.findViewById(R.id.clientEmail);
         edtClientAddress = viewGroup.findViewById(R.id.clientAddress);
+
+        txtLocalGps = viewGroup.findViewById(R.id.txtLocalGps);
 
         txtCode.setText(codeBare);
 
@@ -167,6 +186,10 @@ public class UserPerInfo extends Fragment implements
         // set buttons onclick listner events
         btnTakeClientPic.setOnClickListener(this);
         btnNextSlide.setOnClickListener(this);
+        btnGetClientLocal.setOnClickListener(this);
+
+        clientTypes = new ArrayList<>();
+        clientTypesIds = new ArrayList<>();
 
         locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -188,13 +211,13 @@ public class UserPerInfo extends Fragment implements
 
             @Override
             public void onProviderDisabled(String s) {
-                Toast.makeText(activity, "Provider i sdesibled", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             }
         };
 
         locationManager.requestLocationUpdates("gps", 500, 1,locationListener);
+        getClientTypes();
         desibleOptionsForVis();
         getVisitorData();
         return viewGroup;
@@ -210,14 +233,24 @@ public class UserPerInfo extends Fragment implements
 
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btnTakeClientPic:
                 openBackCamera(10);
                 break;
+            case R.id.btnGetClientLocal:
+                // request the current device location
+                locationManager.requestLocationUpdates("gps", 500, 1,locationListener);
+                if(onlyOneLocation != null){
+                    activity.clientLocation = onlyOneLocation.getLatitude()+","+onlyOneLocation.getLongitude();
+                    txtLocalGps.setText(activity.clientLocation);
+                }
+                break;
             case R.id.btnNextSlide:
                 String role = sharedPreferences.getString("role","0");
+
                 if(role.equals("2")){
                     activity.pager.setCurrentItem(1,true);
                 }else {
@@ -243,7 +276,7 @@ public class UserPerInfo extends Fragment implements
         }
 
         locationManager.requestLocationUpdates("gps", 500, 1,locationListener);
-        activity.clientLocation = onlyOneLocation.getLatitude()+","+onlyOneLocation.getLongitude();
+        //activity.clientLocation = onlyOneLocation.getLatitude()+","+onlyOneLocation.getLongitude();
 
         activity.pager.setCurrentItem(1,true);
 
@@ -344,7 +377,6 @@ public class UserPerInfo extends Fragment implements
                         activity.cityCode.add(jsonArray.getJSONObject(i).getString("code"));
                         activity.cityName.add(jsonArray.getJSONObject(i).getString("ville"));
                     }
-                    Toast.makeText(activity, "city count "+activity.cityName.size(), Toast.LENGTH_SHORT).show();
                     ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item,activity.cityName);
                     spinnerCity.setAdapter(dataAdapter);
                 } catch (JSONException e) {
@@ -485,7 +517,39 @@ public class UserPerInfo extends Fragment implements
         }
     }
 
+    private void getClientTypes(){
+        final String typesUrl = "http://hafid.skandev.com/getClientType.php";
 
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.POST, typesUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray json = new JSONArray(response);
+                    for(int i=0;i<json.length();i++){
+                        clientTypes.add(json.getJSONObject(i).getString("libelle"));
+                        clientTypesIds.add(json.getJSONObject(i).getString("id"));
+                    }
+                    ArrayAdapter<String> clientTypeAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item,clientTypes);
+                    clientTypeList.setAdapter(clientTypeAdapter);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("clientType", "onResponse: success");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity, "Connection Error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return super.getParams();
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
+    }
 
 
 }

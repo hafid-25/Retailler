@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    >
+    tools:layout_marginTop="-900dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -54,47 +55,87 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     >
-                    <CheckBox
-                        android:id="@+id/chkPotInwi"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/check_text_inwi"
-                        />
-                    <CheckBox
-                        android:id="@+id/chkPotOrange"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/check_text_orng"
-                        />
-                    <CheckBox
-                        android:id="@+id/chkPotIam"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/check_text_iam"
-                        />
-                    <CheckBox
-                        android:id="@+id/chkPotTaba"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/check_text_taba"
-                        />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="70dp"
+                        android:layout_margin="5dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/chkInwiImage"
+                            app:layout_constraintTop_toTopOf="@id/chkPotInwi"
+                            app:layout_constraintBottom_toBottomOf="@id/chkPotInwi"
+                            app:layout_constraintRight_toRightOf="parent"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/inwi"/>
+                        <CheckBox
+                            android:id="@+id/chkPotInwi"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:tag="@string/check_text_inwi"
+                            />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="70dp"
+                        android:layout_margin="5dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            app:layout_constraintTop_toTopOf="@id/chkPotOrange"
+                            app:layout_constraintBottom_toBottomOf="@id/chkPotOrange"
+                            app:layout_constraintRight_toRightOf="parent"
+                            android:id="@+id/chkOrgImage"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/org"/>
+                        <CheckBox
+                            android:id="@+id/chkPotOrange"
+                            android:layout_width="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:tag="@string/check_text_orng"
+                            />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="70dp"
+                        android:layout_margin="5dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            app:layout_constraintTop_toTopOf="@id/chkPotIam"
+                            app:layout_constraintBottom_toBottomOf="@id/chkPotIam"
+                            app:layout_constraintRight_toRightOf="parent"
+                            android:id="@+id/chkIamImage"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/iam"/>
+                        <CheckBox
+                            android:id="@+id/chkPotIam"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_weight="1"
+                            android:tag="@string/check_text_iam"
+                            />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/authorMark"
-                    android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/authorMarksList"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/pCheckedContainner"
-                    android:layout_marginTop="5dp"
-                    android:minWidth="200dp"
-                    android:hint="@string/author_marks"
-                    android:textAlignment="center"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:inputType="text"/>
-
+                    android:layout_marginTop="20dp"
+                    />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -371,9 +412,9 @@
 
                         <TableRow>
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="60dp"
+                                android:textAlignment="center"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:visibility="invisible"
                                 />
@@ -405,38 +446,101 @@
 
                         <TableRow>
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="60dp"
+                                android:textAlignment="center"
                                 android:layout_height="wrap_content"
-                                android:text="@string/txt_qte_max"
-                                android:layout_weight="1"
                                 android:gravity="center"
+                                android:text="@string/rechareg_express_text"
                                 />
-                            <EditText
-                                android:id="@+id/edtOrgRechargeMax"
+                            <CheckBox
+                                android:id="@+id/chkHasOrgRechargeExp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:enabled="false"
-                                android:inputType="numberDecimal"
                                 />
-                            <EditText
-                                android:id="@+id/edtInwiRechargeMax"
+                            <CheckBox
+                                android:id="@+id/chkHasInwiRechargeExp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:enabled="false"
-                                android:inputType="numberDecimal"
                                 />
-                            <EditText
-                                android:id="@+id/edtIamRechargeMax"
+                            <CheckBox
+                                android:id="@+id/chkHasIamRechargeExp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:enabled="false"
-                                android:inputType="numberDecimal"
+                                />
+                        </TableRow>
+
+                        <TableRow>
+                            <TextView
+                                android:layout_width="60dp"
+                                android:textAlignment="center"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/rechrge_grattage_text"
+                                />
+                            <CheckBox
+                                android:id="@+id/chkHasOrgRechargeGra"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                            <CheckBox
+                                android:id="@+id/chkHasInwiRechargeGra"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                            <CheckBox
+                                android:id="@+id/chkHasIamRechargeGra"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_marginTop="5dp">
+                            <TextView
+                                android:layout_width="60dp"
+                                android:textAlignment="center"
+                                android:layout_height="wrap_content"
+                                android:text="@string/rechareg_chefredaffaire_text"
+                                android:gravity="center"
+                                />
+                            <Spinner
+                                android:id="@+id/OrgRechargeChefre"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <Spinner
+                                android:id="@+id/InwiRechargeChefre"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                />
+                            <Spinner
+                                android:id="@+id/IamRechargeChefre"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
                                 />
                         </TableRow>
 
@@ -641,13 +745,21 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     android:text="@string/mobile_title_text"
                     android:textColor="@color/colorPrimaryDark"/>
+                <Spinner
+                    android:id="@+id/mobileMoneyTypeList"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/MobileTitle"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/MobileTitle"
+                    app:layout_constraintTop_toBottomOf="@id/mobileMoneyTypeList"
                     android:layout_marginTop="20dp"
                     android:orientation="vertical"
                     >
@@ -733,9 +845,6 @@
                     </TableLayout>
 
                 </LinearLayout>
-
-
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
