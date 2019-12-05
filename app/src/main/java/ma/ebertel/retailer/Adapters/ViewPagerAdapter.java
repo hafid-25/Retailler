@@ -10,6 +10,7 @@ import java.util.List;
 
 import ma.ebertel.retailer.Fragments.UserGenInfo;
 import ma.ebertel.retailer.Fragments.UserPerInfo;
+import ma.ebertel.retailer.Fragments.UserProductInfo;
 import ma.ebertel.retailer.MainActivity;
 import ma.ebertel.retailer.R;
 
@@ -22,6 +23,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         fragments = new ArrayList<>();
         fragments.add(new UserPerInfo(Code,activity));
         fragments.add(new UserGenInfo(activity));
+        fragments.add(new UserProductInfo(activity));
     }
 
     @Override

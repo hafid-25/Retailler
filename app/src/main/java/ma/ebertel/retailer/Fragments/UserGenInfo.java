@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -62,7 +63,7 @@ public class UserGenInfo extends Fragment implements
             ,chkHasOrgRechargeExp,chkHasInwiRechargeExp,chkHasIamRechargeExp
             ,chkHasOrgRechargeGra,chkHasInwiRechargeGra,chkHasIamRechargeGra
             ,chkHasOrgCim,chkHasInwiCim,chkHasIamCim;
-    public Button btnAddValidUser;
+    public ImageButton btnAddValidUser;
     public EditText edtOrgDealerMaxQte,edtInwiDealerMaxQte,edtIamDealerMaxQte
             ,edtOrgCimPrixu,edtInwiCimPrixu,edtIamCimPrixu
             ,edtOrgCimMaxQte,edtInwiCimMaxQte,edtIamCimMaxQte
@@ -273,7 +274,6 @@ public class UserGenInfo extends Fragment implements
 
         // mobile monny spinner
         mobileMoneyTypeList = viewGroup.findViewById(R.id.mobileMoneyTypeList);
-        //todo get mobile mony from database
         mobiles = new ArrayList<>();
         mobiles.add("");
 
@@ -306,15 +306,6 @@ public class UserGenInfo extends Fragment implements
         btnAddValidUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(sharedPreferences.getString("role","0").equals("2")){
-                    // add visiteur remark and return
-                    String remark = edtVisRemark.getText().toString();
-                    if(!remark.equals("") && !activity.clientId.equals("")){
-                        AddVisRemark(remark);
-                    }
-                    return;
-                }
-
                 //set Potence data
                 setPotenceData();
                 // set the dealler info
@@ -327,16 +318,12 @@ public class UserGenInfo extends Fragment implements
                 // and redy to be submitted to the server
                 if(isUserDateValide()){
                     // data is ready to be submitted
-                    Toast.makeText(activity, "data submition", Toast.LENGTH_SHORT).show();
-                    submitData();
+                    activity.pager.setCurrentItem(2,true);
 
                 }else {
                     // show message to user
                     Toast.makeText(activity, "Please Check All Your Fields Something is Messing", Toast.LENGTH_SHORT).show();
                 }
-                Log.d("data", "onClick: recharge "+getRechargeAsString());
-                Log.d("data", "onClick: potence "+getPotenceAsString());
-                Log.d("data", "onClick: mobile monny "+getMobileMonyAsString());
             }
 
 
@@ -408,114 +395,6 @@ public class UserGenInfo extends Fragment implements
         }
     }
 
-    private String getDealerAsString(){
-        StringBuilder dealerString = new StringBuilder();
-
-        for (String[] d: activity.Dealers) {
-            for (String sVal:d) {
-                dealerString.append(sVal+",");
-            }
-            dealerString.append(";");
-        }
-        String newDel = dealerString.toString().replace(",;",";").trim();
-        if(!newDel.equals("")){
-            newDel = newDel.substring(0,newDel.length()-1);
-            return newDel;
-        }
-        return null;
-    }
-
-    private String getRechargeAsString(){
-        StringBuilder rechargeString = new StringBuilder();
-
-        for (String[] d: activity.Rechargs) {
-            for (String sVal:d) {
-                rechargeString.append(sVal+",");
-            }
-            rechargeString.append(";");
-        }
-        String newRech = rechargeString.toString().replace(",;",";").trim();
-        if(!newRech.equals("")){
-            newRech = newRech.substring(0,newRech.length()-1);
-            return newRech;
-        }
-        return null;
-    }
-
-    private String getSimsAsString(){
-        StringBuilder simsString = new StringBuilder();
-
-        for (String[] d: activity.Sims) {
-            for (String sVal:d) {
-                simsString.append(sVal+",");
-            }
-            simsString.append(";");
-        }
-        String newSim = simsString.toString().replace(",;",";").trim();
-        if(!newSim.equals("")){
-            newSim = newSim.substring(0,newSim.length()-1);
-            return newSim;
-        }
-        return null;
-    }
-
-    private String getMobileMonyAsString(){
-        StringBuilder builder = new StringBuilder();
-        if(!activity.MobileMonnyType.equals("")){
-            builder.append(activity.MobileMonnyType+",");
-            if(activity.MobileMonyInteress){
-                builder.append("true,");
-            }else {
-                builder.append("false,");
-            }
-
-            if(activity.MobileMonyPropose){
-                builder.append("true");
-            }else {
-                builder.append("false");
-            }
-        }else {
-            builder.append("");
-        }
-
-        return builder.toString();
-    }
-
-    private String getTelephonyAsString(){
-        StringBuilder builder = new StringBuilder();
-        if(activity.Telephony){
-            builder.append("true,"+activity.TelephonyGamme);
-        }else {
-            builder.append("false,Non");
-        }
-        return builder.toString();
-    }
-
-    private String getAccessoireAsString(){
-        StringBuilder builder = new StringBuilder();
-        if(activity.Accessoire){
-            builder.append("true,"+activity.AccessoireGamme);
-        }else {
-            builder.append("false,Non");
-        }
-        return builder.toString();
-    }
-
-    private String getPotenceAsString(){
-        StringBuilder builder = new StringBuilder();
-        for (String p: activity.Potence) {
-            builder.append(p+",");
-        }
-        //todo add the select potence from the spinner
-
-        String newP = builder.toString().trim();
-        if(!newP.equals("")){
-            newP = newP.substring(0,newP.length()-1);
-            return newP;
-        }
-        return null;
-
-    }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -907,12 +786,12 @@ public class UserGenInfo extends Fragment implements
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(activity, "Connection Error Or This Client Is Already Exists", Toast.LENGTH_LONG).show();
-                Log.d("err", "onErrorResponse: "+error.getMessage());
             }
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<>();
+                // client peronnel data
                 params.put("clientName",activity.clientFullName);
                 params.put("clientCode",activity.codeBarContent);
                 params.put("clientPhone",activity.clientPhoneNumber);
@@ -931,14 +810,14 @@ public class UserGenInfo extends Fragment implements
 
 
                 //complex data
-                params.put("clientDealers",getDealerAsString() != null ? getDealerAsString() : "");
-                params.put("clientRecharge",getRechargeAsString() != null ? getRechargeAsString() : "");
-                params.put("clientSims",getSimsAsString() != null ? getSimsAsString() : "");
-                params.put("clientPot",getPotenceAsString() != null ? getPotenceAsString() : "");
+                //params.put("clientDealers",getDealerAsString() != null ? getDealerAsString() : "");
+                //params.put("clientRecharge",getRechargeAsString() != null ? getRechargeAsString() : "");
+                //params.put("clientSims",getSimsAsString() != null ? getSimsAsString() : "");
+                //params.put("clientPot",getPotenceAsString() != null ? getPotenceAsString() : "");
 
-                params.put("clientMobile",getMobileMonyAsString());
-                params.put("clientTelephony",getTelephonyAsString());
-                params.put("clientAccessoire",getAccessoireAsString());
+                //params.put("clientMobile",getMobileMonyAsString());
+                //params.put("clientTelephony",getTelephonyAsString());
+                //params.put("clientAccessoire",getAccessoireAsString());
 
 
                 return params;
@@ -1196,7 +1075,6 @@ public class UserGenInfo extends Fragment implements
             String[] parts = p.split(":");
             switch (parts[0]){
                 case "interesse":
-                    Toast.makeText(activity, "interess found", Toast.LENGTH_SHORT).show();
                     if(parts[1].equals("1")){
                         btnInterestsYes.setChecked(true);
                     }else {
@@ -1204,7 +1082,6 @@ public class UserGenInfo extends Fragment implements
                     }
                     break;
                 case "propose":
-                    Toast.makeText(activity, "props found", Toast.LENGTH_SHORT).show();
                     if(parts[1].equals("1")){
                         btnProposeYes.setChecked(true);
                     }else {
@@ -1225,7 +1102,6 @@ public class UserGenInfo extends Fragment implements
             StringRequest stringRequest = new StringRequest(Request.Method.POST, visUrl, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Toast.makeText(activity, "Response is here", Toast.LENGTH_SHORT).show();
                     JSONObject json;
                     try {
                         json = new JSONObject(response);
@@ -1264,10 +1140,9 @@ public class UserGenInfo extends Fragment implements
                         try{
                             String mobileString = json.getString("mobile");
                             setMobile(mobileString);
-                            Toast.makeText(activity, "no error", Toast.LENGTH_SHORT).show();
 
                         }catch (Exception ex){
-                            Toast.makeText(activity, "error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "Connection Error", Toast.LENGTH_SHORT).show();
                         }
                         //Log.d("json", "onResponse: "+dealer);
                     } catch (JSONException e) {
@@ -1289,8 +1164,6 @@ public class UserGenInfo extends Fragment implements
             };
             RequestQueue requestQueue = Volley.newRequestQueue(activity);
             requestQueue.add(stringRequest);
-        }else{
-            Toast.makeText(activity, "role is not 2", Toast.LENGTH_SHORT).show();
         }
     }
 
