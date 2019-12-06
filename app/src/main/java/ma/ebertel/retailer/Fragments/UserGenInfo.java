@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -67,7 +68,8 @@ public class UserGenInfo extends Fragment implements
     public EditText edtOrgDealerMaxQte,edtInwiDealerMaxQte,edtIamDealerMaxQte
             ,edtOrgCimPrixu,edtInwiCimPrixu,edtIamCimPrixu
             ,edtOrgCimMaxQte,edtInwiCimMaxQte,edtIamCimMaxQte
-            ,edtVisRemark;
+            ,edtVisRemark
+            ,edtShowIamChifre,edtShowOrgChifre,edtShowInwiChifre;
     public RadioGroup radioPropose,radioInterests,radioTelephony,TelephonyRadioGroup,radioAccessoir,AccessGammeRadioGroup;
     public RadioButton btnAccssBasGamme,btnAccessHautGamme
                         ,btnTelHautGamme,btnTelBasGamme
@@ -77,6 +79,8 @@ public class UserGenInfo extends Fragment implements
                         ,btnAccessYes,btnAccessNo;
     public Spinner OrgRechargeChefre,InwiRechargeChefre,IamRechargeChefre
                 ,mobileMoneyTypeList,authorMarksList;
+    private ViewGroup showIamChifre,showOrgChifre,showInwiChifre;
+    private TableRow rechargeChSpinners;
     public String rechargeIamChifre="",rechargeInwiChifre="",rechargeOrgChifre="",mobileMonnyType="",auhtorMark="";
     public String[] chifers;
     public List<String> mobiles;
@@ -110,6 +114,16 @@ public class UserGenInfo extends Fragment implements
         btnTelBasGamme = viewGroup.findViewById(R.id.btnTelBasGamme);
         btnTelHautGamme = viewGroup.findViewById(R.id.btnTelHautGamme);
         edtVisRemark = viewGroup.findViewById(R.id.edtVisRemark);
+
+        showIamChifre = viewGroup.findViewById(R.id.showIamChifre);
+        showOrgChifre = viewGroup.findViewById(R.id.showOrgChifre);
+        showInwiChifre = viewGroup.findViewById(R.id.showInwiChifre);
+
+        edtShowIamChifre = viewGroup.findViewById(R.id.edtShowIamChifre);
+        edtShowOrgChifre = viewGroup.findViewById(R.id.edtShowOrgChifre);
+        edtShowInwiChifre = viewGroup.findViewById(R.id.edtShowInwiChifre);
+
+        rechargeChSpinners = viewGroup.findViewById(R.id.rechargeChSpinners);
 
         radioInterests.setOnCheckedChangeListener(this);
         radioPropose.setOnCheckedChangeListener(this);
@@ -263,7 +277,9 @@ public class UserGenInfo extends Fragment implements
         authorMarksList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                auhtorMark = Markes.get(i);
+                if(sharedPreferences.getString("role","0").equals("1")){
+                    auhtorMark = Markes.get(i);
+                }
             }
 
             @Override
@@ -280,20 +296,22 @@ public class UserGenInfo extends Fragment implements
         mobileMoneyTypeList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mobileMonnyType = mobiles.get(i);
-                activity.MobileMonnyType = mobileMonnyType;
-                if(mobileMonnyType.equals("")){
-                    // deactivate all the radio buttons
-                    btnInterestsYes.setEnabled(false);
-                    btnInterestsNo.setEnabled(false);
-                    btnProposeYes.setEnabled(false);
-                    btnProposeNo.setEnabled(false);
-                }else {
-                    // reactivate all the authir radio buttons
-                    btnInterestsYes.setEnabled(true);
-                    btnInterestsNo.setEnabled(true);
-                    btnProposeYes.setEnabled(true);
-                    btnProposeNo.setEnabled(true);
+                if(sharedPreferences.getString("role","0").equals("1")){
+                    mobileMonnyType = mobiles.get(i);
+                    activity.MobileMonnyType = mobileMonnyType;
+                    if(mobileMonnyType.equals("")){
+                        // deactivate all the radio buttons
+                        btnInterestsYes.setEnabled(false);
+                        btnInterestsNo.setEnabled(false);
+                        btnProposeYes.setEnabled(false);
+                        btnProposeNo.setEnabled(false);
+                    }else {
+                        // reactivate all the authir radio buttons
+                        btnInterestsYes.setEnabled(true);
+                        btnInterestsNo.setEnabled(true);
+                        btnProposeYes.setEnabled(true);
+                        btnProposeNo.setEnabled(true);
+                    }
                 }
             }
 
@@ -337,6 +355,9 @@ public class UserGenInfo extends Fragment implements
         }else if (role.equals("1")){
             // hide the remark layout
             remarks.setVisibility(View.GONE);
+            showInwiChifre.setVisibility(View.GONE);
+            showIamChifre.setVisibility(View.GONE);
+            showOrgChifre.setVisibility(View.GONE);
             getMarks();
             getMobiles();
         }
@@ -394,7 +415,6 @@ public class UserGenInfo extends Fragment implements
             return false;
         }
     }
-
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -766,68 +786,6 @@ public class UserGenInfo extends Fragment implements
         }
     }
 
-    public void submitData(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, submitUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    String message = jsonObject.getString("messgae");
-                    Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
-                    if(message.equals("Client Added Successfully")){
-                        activity.finish();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Connection Error Or This Client Is Already Exists", Toast.LENGTH_LONG).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<>();
-                // client peronnel data
-                params.put("clientName",activity.clientFullName);
-                params.put("clientCode",activity.codeBarContent);
-                params.put("clientPhone",activity.clientPhoneNumber);
-                params.put("clientAddr",activity.clientAddress);
-                params.put("clientEmail",activity.clientEmail);
-                params.put("clientPer",activity.clientPeriority ? "1" : "0");
-                params.put("clientSat",activity.clientSatisfacion ? "1" : "0");
-                params.put("clientCnss",activity.clientInterssCnss ? "1" : "0");
-                params.put("clientLoc",activity.clientLocation);
-                params.put("real_pic", BitmapHelper.convertBitmapToString(activity.clientImage));
-                params.put("type", activity.clientType);
-
-
-                params.put("clientCity", activity.selectedCityCode);
-                params.put("clientRegion", activity.selectedRegionCode);
-
-
-                //complex data
-                //params.put("clientDealers",getDealerAsString() != null ? getDealerAsString() : "");
-                //params.put("clientRecharge",getRechargeAsString() != null ? getRechargeAsString() : "");
-                //params.put("clientSims",getSimsAsString() != null ? getSimsAsString() : "");
-                //params.put("clientPot",getPotenceAsString() != null ? getPotenceAsString() : "");
-
-                //params.put("clientMobile",getMobileMonyAsString());
-                //params.put("clientTelephony",getTelephonyAsString());
-                //params.put("clientAccessoire",getAccessoireAsString());
-
-
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
-        requestQueue.add(stringRequest);
-    }
-
     private void desibleOptionForVis(){
 
         chkPotInwi.setEnabled(false);
@@ -843,18 +801,18 @@ public class UserGenInfo extends Fragment implements
         chkHasIamCim.setEnabled(false);
 
         btnTelephonyNo.setEnabled(false);
-        btnTelephonyNo.setChecked(false);
+        //btnTelephonyNo.setChecked(false);
         btnTelephonyYes.setEnabled(false);
-        btnTelephonyYes.setChecked(false);
+        //btnTelephonyYes.setChecked(false);
         // mobil mony
         btnInterestsYes.setEnabled(false);
-        btnInterestsYes.setChecked(false);
+        //btnInterestsYes.setChecked(false);
         btnInterestsNo.setEnabled(false);
-        btnInterestsNo.setChecked(false);
-        btnProposeYes.setChecked(false);
+        //btnInterestsNo.setChecked(false);
+        //btnProposeYes.setChecked(false);
         btnProposeYes.setEnabled(false);
         btnProposeNo.setEnabled(false);
-        btnProposeNo.setChecked(false);
+        //btnProposeNo.setChecked(false);
 
         btnAccessNo.setChecked(false);
         btnAccessNo.setEnabled(false);
@@ -865,6 +823,8 @@ public class UserGenInfo extends Fragment implements
         chkHasInwiRecharge.setChecked(false);
 
         // todo desible all the new added op for the vis
+        mobileMoneyTypeList.setEnabled(false);
+        rechargeChSpinners.setVisibility(View.GONE);
 
     }
 
@@ -881,20 +841,22 @@ public class UserGenInfo extends Fragment implements
 
     private void setPotence(JSONObject jsonObject){
         try {
-            String d = jsonObject.getString("operateur");
+            String d = jsonObject.getString("Libelle").toLowerCase();
 
             switch (d){
-                case "Org":
+                case "org":
                     chkPotOrange.setChecked(true);
                     break;
-                case "Iam":
+                case "iam":
                     chkPotIam.setChecked(true);
                     break;
-                case "Inwi":
+                case "inwi":
                     chkPotInwi.setChecked(true);
                     break;
                 default:
-                    // todo set the spinner text
+                    ArrayAdapter<String> MarkAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item,
+                            new String[]{d});
+                    authorMarksList.setAdapter(MarkAdapter);
                     break;
             }
         } catch (JSONException e) {
@@ -988,25 +950,43 @@ public class UserGenInfo extends Fragment implements
     private void setRecharge(JSONObject jsonObject){
         try {
             String op = jsonObject.getString("operateur");
-            String max = jsonObject.getString("QteMax");
+            String exp = jsonObject.getString("express");
+            String gat = jsonObject.getString("grattage");
+            String chfr = jsonObject.getString("chefre");
+
             switch (op){
                 case "Org":
                     chkHasOrgRecharge.setChecked(true);
-                    if(!max.equals("")){
-                        // todo set recharge data
+                    if(exp.equals("1")){
+                        chkHasOrgRechargeExp.setChecked(true);
                     }
+                    if(gat.equals("1")){
+                        chkHasOrgRechargeGra.setChecked(true);
+                    }
+                    edtShowOrgChifre.setText(chfr);
+                    showOrgChifre.setVisibility(View.VISIBLE);
                     break;
                 case "Iam":
                     chkHasIamRecharge.setChecked(true);
-                    if(!max.equals("")){
-                        // todo set recharge data
+                    if(exp.equals("1")){
+                        chkHasIamRechargeExp.setChecked(true);
                     }
+                    if(gat.equals("1")){
+                        chkHasIamRechargeGra.setChecked(true);
+                    }
+                    edtShowIamChifre.setText(chfr);
+                    showIamChifre.setVisibility(View.VISIBLE);
                     break;
                 case "Inwi":
                     chkHasInwiRecharge.setChecked(true);
-                    if(!max.equals("")){
-                        // todo set recharge data
+                    if(exp.equals("1")){
+                        chkHasInwiRechargeExp.setChecked(true);
                     }
+                    if(gat.equals("1")){
+                        chkHasInwiRechargeGra.setChecked(true);
+                    }
+                    edtShowInwiChifre.setText(chfr);
+                    showInwiChifre.setVisibility(View.VISIBLE);
                     break;
             }
         } catch (JSONException e) {
@@ -1066,29 +1046,106 @@ public class UserGenInfo extends Fragment implements
         }
     }
 
-    private void setMobile(String mobileString){
-        //[{"idClient":1,"idMobileM":0,"interesse":1,"propose":1}]
-        String mobile = mobileString.replace("]","").replace("[","").
-                replace("{","").replace("}","");
-        String[] mobileParts = mobile.split(",");
-        for (String p: mobileParts) {
-            String[] parts = p.split(":");
-            switch (parts[0]){
-                case "interesse":
-                    if(parts[1].equals("1")){
-                        btnInterestsYes.setChecked(true);
-                    }else {
-                        btnInterestsYes.setChecked(false);
-                    }
-                    break;
-                case "propose":
-                    if(parts[1].equals("1")){
-                        btnProposeYes.setChecked(true);
-                    }else {
-                        btnProposeYes.setChecked(false);
-                    }
-                    break;
+    private void setMobile(JSONArray mobile){
+        //[{"idClient":9,"idMobileM":2,"interesse":1,"propose":0}]
+        if(mobile != null){
+            try {
+                Toast.makeText(activity, "json file found", Toast.LENGTH_SHORT).show();
+                JSONObject jsonObject = mobile.getJSONObject(0);
+                String interess = jsonObject.getString("interesse");
+                String propos = jsonObject.getString("propose");
+                String operateur = jsonObject.getString("operateur");
+                ArrayAdapter<String> mobileAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item,
+                        new String[]{operateur});
+                mobileMoneyTypeList.setAdapter(mobileAdapter);
+                // set Spinner data
+                Log.d("jsona", "setMobile: interesse = "+interess+" propose = "+propos);
+                if(interess.equals("1")){
+                    btnInterestsYes.setChecked(true);
+                    btnInterestsNo.setChecked(false);
+                }else {
+                    btnInterestsYes.setChecked(false);
+                    btnInterestsNo.setChecked(true);
+                }
+                if(propos.equals("1")){
+                    btnProposeYes.setChecked(true);
+                    btnProposeNo.setChecked(false);
+                }else {
+                    btnProposeYes.setChecked(false);
+                    btnProposeNo.setChecked(true);
+                }
+            } catch (JSONException e) {
+                Toast.makeText(activity, "Json Object not found", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
+        }
+    }
+
+    private void setTelephony(JSONArray telephony){
+        if(telephony != null){
+            try {
+                JSONObject tel = telephony.getJSONObject(0);
+                String inter = tel.getString("interess");
+                String type = tel.getString("type");
+                if(inter.equals("1")){
+                    // show the type
+                    btnTelephonyYes.setChecked(true);
+                    btnTelephonyNo.setChecked(false);
+                    if(type.equals("Bas Gamme")){
+                        btnTelBasGamme.setChecked(true);
+                        btnTelHautGamme.setChecked(false);
+                    }else {
+                        btnTelBasGamme.setChecked(false);
+                        btnTelHautGamme.setChecked(true);
+                    }
+                }else {
+                    btnTelephonyYes.setChecked(false);
+                    btnTelephonyNo.setChecked(true);
+                    btnTelBasGamme.setChecked(false);
+                    btnTelHautGamme.setChecked(false);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }else {
+            btnTelephonyYes.setChecked(false);
+            btnTelephonyNo.setChecked(false);
+            btnTelBasGamme.setChecked(false);
+            btnTelHautGamme.setChecked(false);
+        }
+    }
+
+    private void setAccessoir(JSONArray access){
+        if(access != null){
+            try {
+                JSONObject acc = access.getJSONObject(0);
+                String inter = acc.getString("interess");
+                String type = acc.getString("type");
+                if(inter.equals("1")){
+                    // show the type
+                    btnAccessYes.setChecked(true);
+                    btnAccessNo.setChecked(false);
+                    if(type.equals("Bas Gamme")){
+                        btnAccssBasGamme.setChecked(true);
+                        btnAccessHautGamme.setChecked(false);
+                    }else {
+                        btnAccssBasGamme.setChecked(false);
+                        btnAccessHautGamme.setChecked(true);
+                    }
+                }else {
+                    btnAccessYes.setChecked(false);
+                    btnAccessNo.setChecked(true);
+                    btnAccssBasGamme.setChecked(false);
+                    btnAccessHautGamme.setChecked(false);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }else {
+            btnAccessYes.setChecked(false);
+            btnAccessNo.setChecked(false);
+            btnAccssBasGamme.setChecked(false);
+            btnAccessHautGamme.setChecked(false);
         }
     }
 
@@ -1106,14 +1163,13 @@ public class UserGenInfo extends Fragment implements
                     try {
                         json = new JSONObject(response);
                         JSONObject client = json.getJSONObject("client");
-                        Log.d("json", "onResponse: "+json);
                         try{
                             // for the case of one dealer
-                            JSONObject jsonObject = json.getJSONObject("dealer");
+                            JSONObject jsonObject = json.getJSONObject("visibility");
                             setPotence(jsonObject);
                         }catch (Exception ex){
                             // for the case of more than one dealer
-                            JSONArray jsonArray = json.getJSONArray("dealer");
+                            JSONArray jsonArray = json.getJSONArray("visibility");
                             setPotence(jsonArray);
                         }
                         try{
@@ -1125,9 +1181,11 @@ public class UserGenInfo extends Fragment implements
                         }
                         try{
                             JSONObject jsonObject = json.getJSONObject("recharge");
+                            Log.d("recharge", "onResponse: recharge is object");
                             setRecharge(jsonObject);
                         }catch (Exception ex){
                             JSONArray jsonArray = json.getJSONArray("recharge");
+                            Log.d("recharge", "onResponse: recharge is array");
                             setRecharge(jsonArray);
                         }
                         try{
@@ -1138,13 +1196,25 @@ public class UserGenInfo extends Fragment implements
                             setSim(jsonArray);
                         }
                         try{
-                            String mobileString = json.getString("mobile");
+                            JSONArray mobileString = json.getJSONArray("mobile");
                             setMobile(mobileString);
 
                         }catch (Exception ex){
-                            Toast.makeText(activity, "Connection Error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "Mobile Monny error", Toast.LENGTH_SHORT).show();
                         }
-                        //Log.d("json", "onResponse: "+dealer);
+                        try{
+                            JSONArray telehonyData = json.getJSONArray("telephony");
+                            setTelephony(telehonyData);
+                        }catch (Exception ex){
+                            Toast.makeText(activity, "Telephony Data Not Found", Toast.LENGTH_SHORT).show();
+                        }
+                        try{
+                            JSONArray accessoirData = json.getJSONArray("accessoin");
+                            setAccessoir(accessoirData);
+                        }catch (Exception ex){
+                            Toast.makeText(activity, "Accessoir Data Not Found", Toast.LENGTH_SHORT).show();
+                        }
+                        Log.d("json", "visitor data: "+json);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

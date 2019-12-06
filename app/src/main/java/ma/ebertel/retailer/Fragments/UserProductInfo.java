@@ -158,6 +158,7 @@ public class UserProductInfo extends Fragment implements CompoundButton.OnChecke
         patesRecycler = viewGroup.findViewById(R.id.patesRecycler);
         coucheRecycler = viewGroup.findViewById(R.id.coucheRecycler);
 
+
         sharedPreferences = activity.getSharedPreferences(getString(R.string.shared_name),Context.MODE_PRIVATE);
 
         btnSubmitUser = viewGroup.findViewById(R.id.btnSubmitUser);

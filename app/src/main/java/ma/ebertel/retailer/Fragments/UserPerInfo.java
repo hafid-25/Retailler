@@ -79,7 +79,7 @@ public class UserPerInfo extends Fragment implements
     private Bitmap myBitmap;
     private MainActivity activity;
     private RadioGroup rgPeriority, rgSatisfaction, rgInteressCnss;
-    private ViewGroup TakePicLayout;
+    private ViewGroup TakePicLayout,localGps;
     private RadioButton btnPeriorityYes,btnPeriorityNo,btnSatisfactionYes,btnSatisfactionNo,btnInterestsNo,btnInterestsYes;
 
     private EditText edtClientName, edtClientTel, edtClientEmail, edtClientAddress;
@@ -108,6 +108,7 @@ public class UserPerInfo extends Fragment implements
         spinnerRegion = viewGroup.findViewById(R.id.spinnerRegion);
         spinnerCity = viewGroup.findViewById(R.id.spinnerCity);
         TakePicLayout = viewGroup.findViewById(R.id.photo);
+        localGps = viewGroup.findViewById(R.id.localGps);
         btnPeriorityYes = viewGroup.findViewById(R.id.btnPeriorityYes);
         btnPeriorityNo = viewGroup.findViewById(R.id.btnPeriorityNo);
         btnSatisfactionYes = viewGroup.findViewById(R.id.btnSatisfactionYes);
@@ -115,6 +116,7 @@ public class UserPerInfo extends Fragment implements
         btnInterestsYes = viewGroup.findViewById(R.id.btnInterestsYes);
         btnInterestsNo = viewGroup.findViewById(R.id.btnInterestsNo);
         sharedPreferences = activity.getSharedPreferences(getString(R.string.shared_name), Context.MODE_PRIVATE);
+        final String userRole = sharedPreferences.getString("role","0");
         // create adapter for spinner region
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,activity.regionname);
         spinnerRegion.setAdapter(dataAdapter);
@@ -153,7 +155,9 @@ public class UserPerInfo extends Fragment implements
         clientTypeList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                activity.clientType = clientTypesIds.get(i);
+                if(userRole.equals("1")){
+                    activity.clientType = clientTypesIds.get(i);
+                }
             }
 
             @Override
@@ -217,7 +221,10 @@ public class UserPerInfo extends Fragment implements
         };
 
         locationManager.requestLocationUpdates("gps", 500, 1,locationListener);
-        getClientTypes();
+
+        if(sharedPreferences.getString("role","0").equals("1")){
+            getClientTypes();
+        }
         desibleOptionsForVis();
         getVisitorData();
         return viewGroup;
@@ -411,7 +418,6 @@ public class UserPerInfo extends Fragment implements
             StringRequest stringRequest = new StringRequest(Request.Method.POST, visUrl, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Toast.makeText(activity, "Response is here", Toast.LENGTH_SHORT).show();
                     JSONObject json;
                     try {
                         json = new JSONObject(response);
@@ -455,6 +461,7 @@ public class UserPerInfo extends Fragment implements
         String role = sharedPreferences.getString("role","0");
         if(role.equals("2")){
             TakePicLayout.setVisibility(View.GONE);
+            localGps.setVisibility(View.GONE);
             edtClientName.setEnabled(false);
             edtClientEmail.setEnabled(false);
             edtClientAddress.setEnabled(false);
@@ -474,6 +481,8 @@ public class UserPerInfo extends Fragment implements
 
             spinnerCity.setEnabled(false);
             spinnerRegion.setEnabled(false);
+
+            clientTypeList.setEnabled(false);
         }
     }
 
@@ -488,6 +497,9 @@ public class UserPerInfo extends Fragment implements
 
             ArrayAdapter<String> regionAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,new String[]{client.getString("Region")});
             spinnerRegion.setAdapter(regionAdapter);
+
+            ArrayAdapter<String> clientTypeAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,new String[]{client.getString("type")});
+            clientTypeList.setAdapter(clientTypeAdapter);
 
             ArrayAdapter<String> villeAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,new String[]{client.getString("ville")});
             spinnerCity.setAdapter(villeAdapter);
