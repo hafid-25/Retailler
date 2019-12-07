@@ -165,7 +165,6 @@ public class UserProductInfo extends Fragment implements CompoundButton.OnChecke
         btnSubmitUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(activity, "I think you are ready to finish you jobe", Toast.LENGTH_SHORT).show();
                 Log.d("ids", "onClick: detergent "+getIdsAsString("detergent"));
                 Log.d("ids", "onClick: thé "+getIdsAsString("thé"));
                 Log.d("ids", "onClick: lait "+getIdsAsString("lait"));
@@ -173,12 +172,6 @@ public class UserProductInfo extends Fragment implements CompoundButton.OnChecke
                 Log.d("ids", "onClick: pate "+getIdsAsString("pate"));
                 Log.d("ids", "onClick: couche "+getIdsAsString("couche"));
                 if(sharedPreferences.getString("role","0").equals("2")){
-                    // add visiteur remark and return
-                    // todo add the remark edite text to this fragment and decoment the bellow lines
-                    /*String remark = edtVisRemark.getText().toString();
-                    if(!remark.equals("") && !activity.clientId.equals("")){
-                        AddVisRemark(remark);
-                    }*/
                     return;
                 }
                 submitData();

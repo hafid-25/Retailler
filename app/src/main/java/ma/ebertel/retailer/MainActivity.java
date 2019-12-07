@@ -19,6 +19,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 
@@ -114,6 +115,14 @@ public class MainActivity extends AppCompatActivity
     // visiteur data
     public JSONObject dealerJSonObject = null;
     public JSONArray dealerJSonArray = null;
+
+    // setting the client product for visitor
+    public List<String> clientDetergent = new ArrayList<>();
+    public List<String> clientThe = new ArrayList<>();
+    public List<String> clientLait = new ArrayList<>();
+    public List<String> clientBiscuit = new ArrayList<>();
+    public List<String> clientPate = new ArrayList<>();
+    public List<String> clientCouche = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

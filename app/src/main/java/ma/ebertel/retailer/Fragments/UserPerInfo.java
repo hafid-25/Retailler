@@ -220,7 +220,7 @@ public class UserPerInfo extends Fragment implements
             }
         };
 
-        locationManager.requestLocationUpdates("gps", 500, 1,locationListener);
+        locationManager.requestLocationUpdates("gps", 0, 1,locationListener);
 
         if(sharedPreferences.getString("role","0").equals("1")){
             getClientTypes();
@@ -249,7 +249,7 @@ public class UserPerInfo extends Fragment implements
                 break;
             case R.id.btnGetClientLocal:
                 // request the current device location
-                locationManager.requestLocationUpdates("gps", 500, 1,locationListener);
+                locationManager.requestLocationUpdates("gps", 0, 1,locationListener);
                 if(onlyOneLocation != null){
                     activity.clientLocation = onlyOneLocation.getLatitude()+","+onlyOneLocation.getLongitude();
                     txtLocalGps.setText(activity.clientLocation);
@@ -282,7 +282,7 @@ public class UserPerInfo extends Fragment implements
             activity.clientAddress = edtClientAddress.getText().toString();
         }
 
-        locationManager.requestLocationUpdates("gps", 500, 1,locationListener);
+        locationManager.requestLocationUpdates("gps", 0, 1,locationListener);
         //activity.clientLocation = onlyOneLocation.getLatitude()+","+onlyOneLocation.getLongitude();
 
         activity.pager.setCurrentItem(1,true);
@@ -452,8 +452,6 @@ public class UserPerInfo extends Fragment implements
             };
             RequestQueue requestQueue = Volley.newRequestQueue(activity);
             requestQueue.add(stringRequest);
-        }else{
-            Toast.makeText(activity, "role is not 2", Toast.LENGTH_SHORT).show();
         }
     }
 

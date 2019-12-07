@@ -68,7 +68,6 @@ public class UserGenInfo extends Fragment implements
     public EditText edtOrgDealerMaxQte,edtInwiDealerMaxQte,edtIamDealerMaxQte
             ,edtOrgCimPrixu,edtInwiCimPrixu,edtIamCimPrixu
             ,edtOrgCimMaxQte,edtInwiCimMaxQte,edtIamCimMaxQte
-            ,edtVisRemark
             ,edtShowIamChifre,edtShowOrgChifre,edtShowInwiChifre;
     public RadioGroup radioPropose,radioInterests,radioTelephony,TelephonyRadioGroup,radioAccessoir,AccessGammeRadioGroup;
     public RadioButton btnAccssBasGamme,btnAccessHautGamme
@@ -113,7 +112,6 @@ public class UserGenInfo extends Fragment implements
         btnAccessHautGamme = viewGroup.findViewById(R.id.btnAccessHautGamme);
         btnTelBasGamme = viewGroup.findViewById(R.id.btnTelBasGamme);
         btnTelHautGamme = viewGroup.findViewById(R.id.btnTelHautGamme);
-        edtVisRemark = viewGroup.findViewById(R.id.edtVisRemark);
 
         showIamChifre = viewGroup.findViewById(R.id.showIamChifre);
         showOrgChifre = viewGroup.findViewById(R.id.showOrgChifre);
@@ -324,6 +322,11 @@ public class UserGenInfo extends Fragment implements
         btnAddValidUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String role = sharedPreferences.getString("role","0");
+                if(role.equals("2")){
+                    activity.pager.setCurrentItem(2,true);
+                    return;
+                }
                 //set Potence data
                 setPotenceData();
                 // set the dealler info
@@ -351,10 +354,7 @@ public class UserGenInfo extends Fragment implements
         String role = sharedPreferences.getString("role","0");
         if(role.equals("2")){
             desibleOptionForVis();
-            remarks.setVisibility(View.VISIBLE);
         }else if (role.equals("1")){
-            // hide the remark layout
-            remarks.setVisibility(View.GONE);
             showInwiChifre.setVisibility(View.GONE);
             showIamChifre.setVisibility(View.GONE);
             showOrgChifre.setVisibility(View.GONE);
@@ -364,39 +364,6 @@ public class UserGenInfo extends Fragment implements
         return viewGroup;
     }
 
-    private void AddVisRemark(final String remark) {
-        String remarkUrl = "http://hafid.skandev.com/addRemark.php";
-        StringRequest stringRequest= new StringRequest(Request.Method.POST, remarkUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    String message = jsonObject.getString("message");
-                    if(message.equals("success")){
-                        activity.finish();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Connection Error", Toast.LENGTH_SHORT).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<>();
-                params.put("clientId",activity.clientId);
-                params.put("remark",remark);
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
-        requestQueue.add(stringRequest);
-    }
 
     @Override
     public void onStart() {
@@ -1050,7 +1017,6 @@ public class UserGenInfo extends Fragment implements
         //[{"idClient":9,"idMobileM":2,"interesse":1,"propose":0}]
         if(mobile != null){
             try {
-                Toast.makeText(activity, "json file found", Toast.LENGTH_SHORT).show();
                 JSONObject jsonObject = mobile.getJSONObject(0);
                 String interess = jsonObject.getString("interesse");
                 String propos = jsonObject.getString("propose");
@@ -1075,7 +1041,6 @@ public class UserGenInfo extends Fragment implements
                     btnProposeNo.setChecked(true);
                 }
             } catch (JSONException e) {
-                Toast.makeText(activity, "Json Object not found", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
@@ -1149,6 +1114,90 @@ public class UserGenInfo extends Fragment implements
         }
     }
 
+    private void setDetergent(JSONArray detergent){
+        if(detergent != null){
+            activity.clientDetergent = new ArrayList<>();
+            for(int i=0;i<detergent.length();i++){
+                try {
+                    JSONObject jsonObject = detergent.getJSONObject(i);
+                    activity.clientDetergent.add(jsonObject.getString("libelle"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void setThe(JSONArray thee){
+        if(thee != null){
+            activity.clientThe = new ArrayList<>();
+            for (int i=0;i<thee.length();i++){
+                try {
+                    JSONObject jsonObject = thee.getJSONObject(i);
+                    activity.clientThe.add(jsonObject.getString("libelle"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void setlait(JSONArray lait){
+        if(lait != null){
+            activity.clientLait = new ArrayList<>();
+            for (int i=0;i<lait.length();i++){
+                try {
+                    JSONObject jsonObject = lait.getJSONObject(i);
+                    activity.clientLait.add(jsonObject.getString("libelle"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void setBiscuit(JSONArray biscuit){
+        if(biscuit != null){
+            activity.clientBiscuit = new ArrayList<>();
+            for (int i=0;i<biscuit.length();i++){
+                try {
+                    JSONObject jsonObject = biscuit.getJSONObject(i);
+                    activity.clientBiscuit.add(jsonObject.getString("libelle"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void setPate(JSONArray pate){
+        if(pate != null){
+            activity.clientPate = new ArrayList<>();
+            for (int i=0;i<pate.length();i++){
+                try {
+                    JSONObject jsonObject = pate.getJSONObject(i);
+                    activity.clientPate.add(jsonObject.getString("libelle"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void setCouche(JSONArray couche){
+        if(couche != null){
+            activity.clientCouche = new ArrayList<>();
+            for (int i=0;i<couche.length();i++){
+                try {
+                    JSONObject jsonObject = couche.getJSONObject(i);
+                    activity.clientCouche.add(jsonObject.getString("libelle"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     private void  getVisitorData(){
         // first check if the user type is visiture
         SharedPreferences sharedPreferences = activity.getSharedPreferences(getString(R.string.shared_name), Context.MODE_PRIVATE);
@@ -1214,8 +1263,46 @@ public class UserGenInfo extends Fragment implements
                         }catch (Exception ex){
                             Toast.makeText(activity, "Accessoir Data Not Found", Toast.LENGTH_SHORT).show();
                         }
+                        try{
+                            JSONArray pDetergentData = json.getJSONArray("detergent");
+                            setDetergent(pDetergentData);
+                        }catch (Exception ex){
+                            Toast.makeText(activity, "Detergent Data Not Found", Toast.LENGTH_SHORT).show();
+                        }
+                        try{
+                            JSONArray pTheData = json.getJSONArray("the");
+                            setThe(pTheData);
+                        }catch (Exception ex){
+                            Toast.makeText(activity, "Thé Data Not Found", Toast.LENGTH_SHORT).show();
+                        }
+                        try{
+                            JSONArray pTheData = json.getJSONArray("lait");
+                            setlait(pTheData);
+                        }catch (Exception ex){
+                            Toast.makeText(activity, "Lait Data Not Found", Toast.LENGTH_SHORT).show();
+                        }
+                        try{
+                            JSONArray pTheData = json.getJSONArray("biscuit");
+                            setBiscuit(pTheData);
+                        }catch (Exception ex){
+                            Toast.makeText(activity, "Biscuit Data Not Found", Toast.LENGTH_SHORT).show();
+                        }
+                        try{
+                            JSONArray pTheData = json.getJSONArray("pate");
+                            setPate(pTheData);
+                        }catch (Exception ex){
+                            Toast.makeText(activity, "Pate Data Not Found", Toast.LENGTH_SHORT).show();
+                        }
+                        try{
+                            JSONArray pTheData = json.getJSONArray("couche");
+                            setCouche(pTheData);
+                        }catch (Exception ex){
+                            Toast.makeText(activity, "Coche Data Not Found", Toast.LENGTH_SHORT).show();
+                        }
                         Log.d("json", "visitor data: "+json);
                     } catch (JSONException e) {
+                        activity.finish();
+                        Toast.makeText(activity, "This Client Not Exists", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
                 }
