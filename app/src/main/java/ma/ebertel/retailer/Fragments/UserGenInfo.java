@@ -789,7 +789,6 @@ public class UserGenInfo extends Fragment implements
         chkHasInwiRecharge.setEnabled(false);
         chkHasInwiRecharge.setChecked(false);
 
-        // todo desible all the new added op for the vis
         mobileMoneyTypeList.setEnabled(false);
         rechargeChSpinners.setVisibility(View.GONE);
 
