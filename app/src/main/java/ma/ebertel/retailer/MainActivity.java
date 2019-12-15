@@ -116,6 +116,9 @@ public class MainActivity extends AppCompatActivity
     public JSONObject dealerJSonObject = null;
     public JSONArray dealerJSonArray = null;
 
+    public boolean visSatisfactionYes = true;
+
+
     // setting the client product for visitor
     public List<String> clientDetergent = new ArrayList<>();
     public List<String> clientThe = new ArrayList<>();

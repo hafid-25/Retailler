@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:layout_marginTop="-200dp">
+    tools:layout_marginTop="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -170,6 +170,7 @@
                     android:textColor="@color/colorPrimaryDark"/>
 
                 <LinearLayout
+                    android:id="@+id/table"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintRight_toRightOf="parent"
@@ -185,46 +186,97 @@
 
                         <TableRow>
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="60dp"
                                 android:layout_height="wrap_content"
                                 android:text="kjhjhjkhkj"
-                                android:layout_weight="1"
                                 android:visibility="invisible"
                                 android:gravity="center"
                                 />
-                            <CheckBox
-                                android:id="@+id/chkHasOrgDealer"
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/check_text_orng"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasInwiDealer"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:id="@+id/chkDOrgImage"
+                                    app:layout_constraintTop_toTopOf="@id/chkHasOrgDealer"
+                                    app:layout_constraintBottom_toBottomOf="@id/chkHasOrgDealer"
+                                    app:layout_constraintLeft_toRightOf="@id/chkHasOrgDealer"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:src="@drawable/org"/>
+                                <CheckBox
+                                    android:id="@+id/chkHasOrgDealer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:tag="Orng"
+                                    android:gravity="center"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/check_text_inwi"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasIamDealer"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:id="@+id/chkDInwiImage"
+                                    app:layout_constraintTop_toTopOf="@id/chkHasInwiDealer"
+                                    app:layout_constraintBottom_toBottomOf="@id/chkHasInwiDealer"
+                                    app:layout_constraintLeft_toRightOf="@id/chkHasInwiDealer"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:src="@drawable/inwi"/>
+                                <CheckBox
+                                    android:id="@+id/chkHasInwiDealer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:tag="Inwi"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/check_text_iam"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:id="@+id/chkDIamImage"
+                                    app:layout_constraintTop_toTopOf="@id/chkHasIamDealer"
+                                    app:layout_constraintBottom_toBottomOf="@id/chkHasIamDealer"
+                                    app:layout_constraintLeft_toRightOf="@id/chkHasIamDealer"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:src="@drawable/iam"/>
+                                <CheckBox
+                                    android:id="@+id/chkHasIamDealer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:tag="Iam"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
                         </TableRow>
 
                         <TableRow>
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="60dp"
                                 android:layout_height="wrap_content"
                                 android:text="@string/txt_activation"
-                                android:layout_weight="1"
                                 android:gravity="center"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
                                 />
                             <CheckBox
                                 android:id="@+id/chkHasOrgDealerActiva"
@@ -254,204 +306,13 @@
 
                         <TableRow>
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/txt_recharge"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasOrgDealerRecharge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:enabled="false"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasInwiDealerRecharge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:enabled="false"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasIamDealerRecharge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:enabled="false"
-                                />
-                        </TableRow>
-
-                        <TableRow>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/txt_adventageous"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasOrgDealerAdv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:enabled="false"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasInwiDealerAdv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:enabled="false"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasIamDealerAdv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:enabled="false"
-                                />
-                        </TableRow>
-
-                        <TableRow>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/txt_qte_max"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
-                            <EditText
-                                android:id="@+id/edtOrgDealerMaxQte"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:enabled="false"
-                                android:inputType="number"
-                                />
-                            <EditText
-                                android:id="@+id/edtInwiDealerMaxQte"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:enabled="false"
-                                android:inputType="number"
-                                />
-                            <EditText
-                                android:id="@+id/edtIamDealerMaxQte"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:enabled="false"
-                                android:inputType="number"
-                                />
-                        </TableRow>
-
-                    </TableLayout>
-
-                </LinearLayout>
-
-
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/recharge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dealers"
-            app:cardCornerRadius="5dp"
-            android:layout_marginTop="5dp"
-            >
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp">
-                <TextView
-                    android:id="@+id/rechargeTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    android:text="Recharge"
-                    android:textColor="@color/colorPrimaryDark"/>
-
-                <LinearLayout
-                    android:id="@+id/table"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rechargeTitle"
-                    android:layout_marginTop="20dp"
-                    android:orientation="vertical">
-
-                    <TableLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
-
-                        <TableRow>
-                            <TextView
-                                android:layout_width="60dp"
-                                android:textAlignment="center"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:visibility="invisible"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasOrgRecharge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/check_text_orng"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasInwiRecharge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/check_text_inwi"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasIamRecharge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/check_text_iam"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
-                        </TableRow>
-
-                        <TableRow>
-                            <TextView
                                 android:layout_width="60dp"
                                 android:textAlignment="center"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="@string/rechareg_express_text"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
                                 />
                             <CheckBox
                                 android:id="@+id/chkHasOrgRechargeExp"
@@ -486,6 +347,8 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="@string/rechrge_grattage_text"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
                                 />
                             <CheckBox
                                 android:id="@+id/chkHasOrgRechargeGra"
@@ -513,6 +376,41 @@
                                 />
                         </TableRow>
 
+                        <TableRow>
+                            <TextView
+                                android:layout_width="60dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_adventageous"
+                                android:gravity="center"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
+                                />
+                            <CheckBox
+                                android:id="@+id/chkHasOrgDealerAdv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                            <CheckBox
+                                android:id="@+id/chkHasInwiDealerAdv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                            <CheckBox
+                                android:id="@+id/chkHasIamDealerAdv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:enabled="false"
+                                />
+                        </TableRow>
+
                         <TableRow
                             android:id="@+id/rechargeChSpinners"
                             android:layout_marginTop="5dp">
@@ -522,6 +420,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/rechareg_chefredaffaire_text"
                                 android:gravity="center"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
                                 />
                             <Spinner
                                 android:id="@+id/OrgRechargeChefre"
@@ -545,7 +445,6 @@
                                 android:gravity="center"
                                 />
                         </TableRow>
-
 
                     </TableLayout>
 
@@ -615,11 +514,6 @@
                     </LinearLayout>
                 </LinearLayout>
 
-
-
-
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -630,7 +524,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recharge"
+            app:layout_constraintTop_toBottomOf="@id/dealers"
             app:cardCornerRadius="5dp"
             android:layout_marginTop="5dp"
             >
@@ -675,30 +569,77 @@
                                 android:visibility="invisible"
                                 android:gravity="center"
                                 />
-                            <CheckBox
-                                android:id="@+id/chkHasOrgCim"
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/check_text_orng"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasInwiCim"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:id="@+id/chkCOrgImage"
+                                    app:layout_constraintTop_toTopOf="@id/chkHasOrgCim"
+                                    app:layout_constraintBottom_toBottomOf="@id/chkHasOrgCim"
+                                    app:layout_constraintLeft_toRightOf="@id/chkHasOrgCim"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:src="@drawable/org"/>
+                                <CheckBox
+                                    android:id="@+id/chkHasOrgCim"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/check_text_inwi"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
-                            <CheckBox
-                                android:id="@+id/chkHasIamCim"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:id="@+id/chkCInwiImage"
+                                    app:layout_constraintTop_toTopOf="@id/chkHasInwiCim"
+                                    app:layout_constraintBottom_toBottomOf="@id/chkHasInwiCim"
+                                    app:layout_constraintLeft_toRightOf="@id/chkHasInwiCim"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:src="@drawable/inwi"/>
+                                <CheckBox
+                                    android:id="@+id/chkHasInwiCim"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/check_text_iam"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                />
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:id="@+id/chkCIamImage"
+                                    app:layout_constraintTop_toTopOf="@id/chkHasIamCim"
+                                    app:layout_constraintBottom_toBottomOf="@id/chkHasIamCim"
+                                    app:layout_constraintLeft_toRightOf="@id/chkHasIamCim"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:src="@drawable/iam"/>
+                                <CheckBox
+                                    android:id="@+id/chkHasIamCim"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
                         </TableRow>
 
                         <TableRow>

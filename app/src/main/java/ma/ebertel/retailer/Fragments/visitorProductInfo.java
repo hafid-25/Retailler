@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -59,6 +60,8 @@ public class visitorProductInfo extends Fragment {
     private EditText edtVisRemark;
     private Button btnVisSubmitUser;
 
+    private RadioButton btnSatisfactionYes,btnSatisfactionNo;
+
     public visitorProductInfo(MainActivity activity){
         this.activity = activity;
     }
@@ -73,6 +76,8 @@ public class visitorProductInfo extends Fragment {
         biscuitsVisRecycler = viewGroup.findViewById(R.id.biscuitsVisRecycler);
         patesVisRecycler = viewGroup.findViewById(R.id.patesVisRecycler);
         coucheRecycler = viewGroup.findViewById(R.id.coucheRecycler);
+        btnSatisfactionYes = viewGroup.findViewById(R.id.btnSatisfactionYes);
+        btnSatisfactionNo = viewGroup.findViewById(R.id.btnSatisfactionNo);
 
         remarks = viewGroup.findViewById(R.id.remarks);
         edtVisRemark = viewGroup.findViewById(R.id.edtVisRemark);
@@ -100,6 +105,7 @@ public class visitorProductInfo extends Fragment {
             // hide the remark layout
             remarks.setVisibility(View.GONE);
         }
+        setVisData();
         return viewGroup;
     }
 
@@ -174,5 +180,17 @@ public class visitorProductInfo extends Fragment {
 
         RequestQueue requestQueue = Volley.newRequestQueue(activity);
         requestQueue.add(stringRequest);
+    }
+
+    private void setVisData(){
+        btnSatisfactionNo.setEnabled(false);
+        btnSatisfactionYes.setEnabled(false);
+        if(activity.visSatisfactionYes){
+            btnSatisfactionNo.setChecked(false);
+            btnSatisfactionYes.setChecked(true);
+        }else {
+            btnSatisfactionNo.setChecked(true);
+            btnSatisfactionYes.setChecked(false);
+        }
     }
 }

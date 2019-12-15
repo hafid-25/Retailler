@@ -58,15 +58,12 @@ public class UserGenInfo extends Fragment implements
     public CheckBox chkPotInwi,chkPotOrange,chkPotIam
             ,chkHasOrgDealer,chkHasInwiDealer,chkHasIamDealer
             ,chkHasOrgDealerActiva,chkHasInwiDealerActiva,chkHasIamDealerActiva
-            ,chkHasOrgDealerRecharge,chkHasInwiDealerRecharge,chkHasIamDealerRecharge
             ,chkHasOrgDealerAdv,chkHasInwiDealerAdv,chkHasIamDealerAdv
-            ,chkHasOrgRecharge,chkHasInwiRecharge,chkHasIamRecharge
             ,chkHasOrgRechargeExp,chkHasInwiRechargeExp,chkHasIamRechargeExp
             ,chkHasOrgRechargeGra,chkHasInwiRechargeGra,chkHasIamRechargeGra
             ,chkHasOrgCim,chkHasInwiCim,chkHasIamCim;
     public ImageButton btnAddValidUser;
-    public EditText edtOrgDealerMaxQte,edtInwiDealerMaxQte,edtIamDealerMaxQte
-            ,edtOrgCimPrixu,edtInwiCimPrixu,edtIamCimPrixu
+    public EditText edtOrgCimPrixu,edtInwiCimPrixu,edtIamCimPrixu
             ,edtOrgCimMaxQte,edtInwiCimMaxQte,edtIamCimMaxQte
             ,edtShowIamChifre,edtShowOrgChifre,edtShowInwiChifre;
     public RadioGroup radioPropose,radioInterests,radioTelephony,TelephonyRadioGroup,radioAccessoir,AccessGammeRadioGroup;
@@ -141,23 +138,11 @@ public class UserGenInfo extends Fragment implements
         chkHasOrgDealerActiva = viewGroup.findViewById(R.id.chkHasOrgDealerActiva);
         chkHasInwiDealerActiva = viewGroup.findViewById(R.id.chkHasInwiDealerActiva);
         chkHasIamDealerActiva = viewGroup.findViewById(R.id.chkHasIamDealerActiva);
-        // dealer recharge option
-        chkHasOrgDealerRecharge = viewGroup.findViewById(R.id.chkHasOrgDealerRecharge);
-        chkHasInwiDealerRecharge = viewGroup.findViewById(R.id.chkHasInwiDealerRecharge);
-        chkHasIamDealerRecharge = viewGroup.findViewById(R.id.chkHasIamDealerRecharge);
         // dealer adventagous option
         chkHasOrgDealerAdv = viewGroup.findViewById(R.id.chkHasOrgDealerAdv);
         chkHasInwiDealerAdv = viewGroup.findViewById(R.id.chkHasInwiDealerAdv);
         chkHasIamDealerAdv = viewGroup.findViewById(R.id.chkHasIamDealerAdv);
-        // dealer max qte
-        edtOrgDealerMaxQte = viewGroup.findViewById(R.id.edtOrgDealerMaxQte);
-        edtInwiDealerMaxQte = viewGroup.findViewById(R.id.edtInwiDealerMaxQte);
-        edtIamDealerMaxQte = viewGroup.findViewById(R.id.edtIamDealerMaxQte);
 
-        // rechareg
-        chkHasOrgRecharge = viewGroup.findViewById(R.id.chkHasOrgRecharge);
-        chkHasInwiRecharge = viewGroup.findViewById(R.id.chkHasInwiRecharge);
-        chkHasIamRecharge = viewGroup.findViewById(R.id.chkHasIamRecharge);
         // recharge chifre d'affaire
         OrgRechargeChefre = viewGroup.findViewById(R.id.OrgRechargeChefre);
         InwiRechargeChefre = viewGroup.findViewById(R.id.InwiRechargeChefre);
@@ -252,10 +237,6 @@ public class UserGenInfo extends Fragment implements
         chkHasIamDealer.setOnCheckedChangeListener(this);
         chkHasInwiDealer.setOnCheckedChangeListener(this);
         chkHasOrgDealer.setOnCheckedChangeListener(this);
-        // recharge
-        chkHasOrgRecharge.setOnCheckedChangeListener(this);
-        chkHasInwiRecharge.setOnCheckedChangeListener(this);
-        chkHasIamRecharge.setOnCheckedChangeListener(this);
 
         // cims
         chkHasOrgCim.setOnCheckedChangeListener(this);
@@ -385,21 +366,13 @@ public class UserGenInfo extends Fragment implements
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        String checked = compoundButton.getText().toString();
+        String checked = compoundButton.getTag().toString();
         if(compoundButton.getId() == R.id.chkHasIamDealer || compoundButton.getId() == R.id.chkHasInwiDealer ||
                 compoundButton.getId() == R.id.chkHasOrgDealer){
             if(b){
                 enableOptions(checked,"del");
             }else {
                 desibleOptions(checked,"del");
-            }
-        }
-        if(compoundButton.getId() == R.id.chkHasOrgRecharge || compoundButton.getId() == R.id.chkHasInwiRecharge ||
-                compoundButton.getId() == R.id.chkHasIamRecharge){
-            if(b){
-                enableOptions(checked,"rech");
-            }else {
-                desibleOptions(checked,"rech");
             }
         }
         if(compoundButton.getId() == R.id.chkHasOrgCim || compoundButton.getId() == R.id.chkHasInwiCim ||
@@ -437,6 +410,7 @@ public class UserGenInfo extends Fragment implements
         activity.Dealers.clear();
         if(chkHasIamDealer.isChecked()){
             // insert the iam dealer info
+            // todo update here
             dname = "Iam";
             dactiv = "0";
             drech = "0";
@@ -445,14 +419,8 @@ public class UserGenInfo extends Fragment implements
             if(chkHasIamDealerActiva.isChecked() && chkHasIamDealerActiva.isEnabled()){
                 dactiv = "1";
             }
-            if(chkHasIamDealerRecharge.isChecked() && chkHasIamDealerRecharge.isEnabled()){
-                drech = "1";
-            }
             if(chkHasIamDealerAdv.isChecked() && chkHasIamDealerAdv.isEnabled()){
                 dadv = "1";
-            }
-            if(!edtIamDealerMaxQte.getText().toString().equals("")){
-                dqtemax = edtIamDealerMaxQte.getText().toString();
             }
 
             String[] d = new String[]{dname,dactiv,drech,dadv,dqtemax};
@@ -460,6 +428,7 @@ public class UserGenInfo extends Fragment implements
         }
         if(chkHasInwiDealer.isChecked()){
             // insert the inwi dealer info
+            // todo update here
             dname = "Inwi";
             dactiv = "0";
             drech = "0";
@@ -468,14 +437,8 @@ public class UserGenInfo extends Fragment implements
             if(chkHasInwiDealerActiva.isChecked() && chkHasInwiDealerActiva.isEnabled()){
                 dactiv = "1";
             }
-            if(chkHasInwiDealerRecharge.isChecked() && chkHasInwiDealerRecharge.isEnabled()){
-                drech = "1";
-            }
             if(chkHasInwiDealerAdv.isChecked() && chkHasInwiDealerAdv.isEnabled()){
                 dadv = "1";
-            }
-            if(!edtInwiDealerMaxQte.getText().toString().equals("")){
-                dqtemax = edtInwiDealerMaxQte.getText().toString();
             }
 
             String[] d = new String[]{dname,dactiv,drech,dadv,dqtemax};
@@ -483,6 +446,7 @@ public class UserGenInfo extends Fragment implements
         }
         if(chkHasOrgDealer.isChecked()){
             // insert the org dealer info
+            // todo update here
             dname = "Org";
             dactiv = "0";
             drech = "0";
@@ -491,14 +455,8 @@ public class UserGenInfo extends Fragment implements
             if(chkHasOrgDealerActiva.isChecked() && chkHasOrgDealerActiva.isEnabled()){
                 dactiv = "1";
             }
-            if(chkHasOrgDealerRecharge.isChecked() && chkHasOrgDealerRecharge.isEnabled()){
-                drech = "1";
-            }
             if(chkHasOrgDealerAdv.isChecked() && chkHasOrgDealerAdv.isEnabled()){
                 dadv = "1";
-            }
-            if(!edtOrgDealerMaxQte.getText().toString().equals("")){
-                dqtemax = edtOrgDealerMaxQte.getText().toString();
             }
 
             String[] d = new String[]{dname,dactiv,drech,dadv,dqtemax};
@@ -517,7 +475,7 @@ public class UserGenInfo extends Fragment implements
         String ROrgGra = "0";
         String RInwiGra = "0";
         activity.Rechargs.clear();
-        if(chkHasIamRecharge.isChecked()){
+        /*if(chkHasIamRecharge.isChecked()){
             Rname = "Iam";
             if(chkHasIamRechargeExp.isChecked()){
                 RIamExp = "1";
@@ -552,7 +510,7 @@ public class UserGenInfo extends Fragment implements
 
             String[] val = new String[]{Rname,RInwiExp,RInwiGra,rechargeInwiChifre};
             activity.Rechargs.add(val);
-        }
+        }*/
     }
 
     private void setSimsData(){
@@ -596,13 +554,15 @@ public class UserGenInfo extends Fragment implements
     }
 
     private void enableOptions(String type,String lay) {
+        // todo update here if he needs updates
         switch (type){
             case "Orng":
                 if(lay.equals("del")){
                     chkHasOrgDealerActiva.setEnabled(true);
                     chkHasOrgDealerAdv.setEnabled(true);
-                    chkHasOrgDealerRecharge.setEnabled(true);
-                    edtOrgDealerMaxQte.setEnabled(true);
+                    chkHasOrgRechargeExp.setEnabled(true);
+                    chkHasOrgRechargeGra.setEnabled(true);
+                    OrgRechargeChefre.setEnabled(true);
                 }else if (lay.equals("rech")){
                     chkHasOrgRechargeExp.setEnabled(true);
                     chkHasOrgRechargeGra.setEnabled(true);
@@ -616,12 +576,14 @@ public class UserGenInfo extends Fragment implements
                 if(lay.equals("del")){
                     chkHasInwiDealerActiva.setEnabled(true);
                     chkHasInwiDealerAdv.setEnabled(true);
-                    chkHasInwiDealerRecharge.setEnabled(true);
-                    edtInwiDealerMaxQte.setEnabled(true);
+                    chkHasInwiRechargeExp.setEnabled(true);
+                    chkHasInwiRechargeGra.setEnabled(true);
+                    InwiRechargeChefre.setEnabled(true);
                 }else if (lay.equals("rech")){
                     chkHasInwiRechargeExp.setEnabled(true);
                     chkHasInwiRechargeGra.setEnabled(true);
                     InwiRechargeChefre.setEnabled(true);
+                    chkHasInwiRechargeGra.setEnabled(true);
                 }else if (lay.equals("cim")){
                     edtInwiCimMaxQte.setEnabled(true);
                     edtInwiCimPrixu.setEnabled(true);
@@ -631,8 +593,9 @@ public class UserGenInfo extends Fragment implements
                 if(lay.equals("del")){
                     chkHasIamDealerActiva.setEnabled(true);
                     chkHasIamDealerAdv.setEnabled(true);
-                    chkHasIamDealerRecharge.setEnabled(true);
-                    edtIamDealerMaxQte.setEnabled(true);
+                    chkHasIamRechargeExp.setEnabled(true);
+                    chkHasIamRechargeGra.setEnabled(true);
+                    IamRechargeChefre.setEnabled(true);
                 }else if (lay.equals("rech")){
                     chkHasIamRechargeExp.setEnabled(true);
                     chkHasIamRechargeGra.setEnabled(true);
@@ -646,13 +609,15 @@ public class UserGenInfo extends Fragment implements
     }
 
     private void desibleOptions(String type,String lay) {
+        // todo update here if he needs updates
         switch (type){
             case "Orng":
                 if(lay.equals("del")){
                     chkHasOrgDealerActiva.setEnabled(false);
                     chkHasOrgDealerAdv.setEnabled(false);
-                    chkHasOrgDealerRecharge.setEnabled(false);
-                    edtOrgDealerMaxQte.setEnabled(false);
+                    chkHasOrgRechargeExp.setEnabled(false);
+                    chkHasOrgRechargeGra.setEnabled(false);
+                    OrgRechargeChefre.setEnabled(false);
                 }else if (lay.equals("rech")){
                     chkHasOrgRechargeExp.setEnabled(false);
                     chkHasOrgRechargeGra.setEnabled(false);
@@ -666,8 +631,9 @@ public class UserGenInfo extends Fragment implements
                 if(lay.equals("del")){
                     chkHasInwiDealerActiva.setEnabled(false);
                     chkHasInwiDealerAdv.setEnabled(false);
-                    chkHasInwiDealerRecharge.setEnabled(false);
-                    edtInwiDealerMaxQte.setEnabled(false);
+                    chkHasInwiRechargeExp.setEnabled(false);
+                    chkHasInwiRechargeGra.setEnabled(false);
+                    InwiRechargeChefre.setEnabled(false);
                 }else if (lay.equals("rech")){
                     chkHasInwiRechargeExp.setEnabled(false);
                     chkHasInwiRechargeGra.setEnabled(false);
@@ -681,8 +647,9 @@ public class UserGenInfo extends Fragment implements
                 if(lay.equals("del")){
                     chkHasIamDealerActiva.setEnabled(false);
                     chkHasIamDealerAdv.setEnabled(false);
-                    chkHasIamDealerRecharge.setEnabled(false);
-                    edtIamDealerMaxQte.setEnabled(false);
+                    chkHasIamRechargeExp.setEnabled(false);
+                    chkHasIamRechargeGra.setEnabled(false);
+                    IamRechargeChefre.setEnabled(false);
                 }else if (lay.equals("rech")){
                     chkHasIamRechargeExp.setEnabled(false);
                     chkHasIamRechargeGra.setEnabled(false);
@@ -761,8 +728,6 @@ public class UserGenInfo extends Fragment implements
         chkHasOrgDealer.setEnabled(false);
         chkHasInwiDealer.setEnabled(false);
         chkHasIamDealer.setEnabled(false);
-        chkHasOrgRecharge.setEnabled(false);
-        chkHasIamRecharge.setEnabled(false);
         chkHasOrgCim.setEnabled(false);
         chkHasInwiCim.setEnabled(false);
         chkHasIamCim.setEnabled(false);
@@ -785,9 +750,6 @@ public class UserGenInfo extends Fragment implements
         btnAccessNo.setEnabled(false);
         btnAccessYes.setEnabled(false);
         btnAccessYes.setChecked(false);
-
-        chkHasInwiRecharge.setEnabled(false);
-        chkHasInwiRecharge.setChecked(false);
 
         mobileMoneyTypeList.setEnabled(false);
         rechargeChSpinners.setVisibility(View.GONE);
@@ -842,6 +804,7 @@ public class UserGenInfo extends Fragment implements
     }
 
     private void setDealer(JSONObject jsonObject){
+        // todo update the new dealer information
         try {
             String op = jsonObject.getString("operateur");
             String activ = jsonObject.getString("activation");
@@ -855,14 +818,9 @@ public class UserGenInfo extends Fragment implements
                     if(activ.equals("1")){
                         chkHasOrgDealerActiva.setChecked(true);
                     }
-                    if(recharge.equals("1")){
-                        chkHasOrgDealerRecharge.setChecked(true);
-                    }
+
                     if(adv.equals("1")){
                         chkHasOrgDealerAdv.setChecked(true);
-                    }
-                    if(!max.equals("")){
-                        edtOrgDealerMaxQte.setText(max);
                     }
                     break;
                 case "Iam":
@@ -870,14 +828,8 @@ public class UserGenInfo extends Fragment implements
                     if(activ.equals("1")){
                         chkHasIamDealerActiva.setChecked(true);
                     }
-                    if(recharge.equals("1")){
-                        chkHasIamDealerRecharge.setChecked(true);
-                    }
                     if(adv.equals("1")){
                         chkHasIamDealerAdv.setChecked(true);
-                    }
-                    if(!max.equals("")){
-                        edtIamDealerMaxQte.setText(max);
                     }
                     break;
                 case "Inwi":
@@ -885,14 +837,8 @@ public class UserGenInfo extends Fragment implements
                     if(activ.equals("1")){
                         chkHasInwiDealerActiva.setChecked(true);
                     }
-                    if(recharge.equals("1")){
-                        chkHasInwiDealerRecharge.setChecked(true);
-                    }
                     if(adv.equals("1")){
                         chkHasInwiDealerAdv.setChecked(true);
-                    }
-                    if(!max.equals("")){
-                        edtInwiDealerMaxQte.setText(max);
                     }
                     break;
             }
@@ -914,6 +860,7 @@ public class UserGenInfo extends Fragment implements
     }
 
     private void setRecharge(JSONObject jsonObject){
+        // todo get data from this function and deleted
         try {
             String op = jsonObject.getString("operateur");
             String exp = jsonObject.getString("express");
@@ -922,7 +869,6 @@ public class UserGenInfo extends Fragment implements
 
             switch (op){
                 case "Org":
-                    chkHasOrgRecharge.setChecked(true);
                     if(exp.equals("1")){
                         chkHasOrgRechargeExp.setChecked(true);
                     }
@@ -933,7 +879,6 @@ public class UserGenInfo extends Fragment implements
                     showOrgChifre.setVisibility(View.VISIBLE);
                     break;
                 case "Iam":
-                    chkHasIamRecharge.setChecked(true);
                     if(exp.equals("1")){
                         chkHasIamRechargeExp.setChecked(true);
                     }
@@ -944,7 +889,6 @@ public class UserGenInfo extends Fragment implements
                     showIamChifre.setVisibility(View.VISIBLE);
                     break;
                 case "Inwi":
-                    chkHasInwiRecharge.setChecked(true);
                     if(exp.equals("1")){
                         chkHasInwiRechargeExp.setChecked(true);
                     }

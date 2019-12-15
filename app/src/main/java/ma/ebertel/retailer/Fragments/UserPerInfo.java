@@ -78,9 +78,9 @@ public class UserPerInfo extends Fragment implements
     private ImageView clientImage;
     private Bitmap myBitmap;
     private MainActivity activity;
-    private RadioGroup rgPeriority, rgSatisfaction, rgInteressCnss;
-    private ViewGroup TakePicLayout,localGps;
-    private RadioButton btnPeriorityYes,btnPeriorityNo,btnSatisfactionYes,btnSatisfactionNo,btnInterestsNo,btnInterestsYes;
+    private RadioGroup rgPeriority, rgInteressCnss;
+    private ViewGroup TakePicLayout;
+    private RadioButton btnPeriorityYes,btnPeriorityNo,btnInterestsNo,btnInterestsYes;
 
     private EditText edtClientName, edtClientTel, edtClientEmail, edtClientAddress;
     private Spinner spinnerRegion,spinnerCity,clientTypeList;
@@ -108,11 +108,8 @@ public class UserPerInfo extends Fragment implements
         spinnerRegion = viewGroup.findViewById(R.id.spinnerRegion);
         spinnerCity = viewGroup.findViewById(R.id.spinnerCity);
         TakePicLayout = viewGroup.findViewById(R.id.photo);
-        localGps = viewGroup.findViewById(R.id.localGps);
         btnPeriorityYes = viewGroup.findViewById(R.id.btnPeriorityYes);
         btnPeriorityNo = viewGroup.findViewById(R.id.btnPeriorityNo);
-        btnSatisfactionYes = viewGroup.findViewById(R.id.btnSatisfactionYes);
-        btnSatisfactionNo = viewGroup.findViewById(R.id.btnSatisfactionNo);
         btnInterestsYes = viewGroup.findViewById(R.id.btnInterestsYes);
         btnInterestsNo = viewGroup.findViewById(R.id.btnInterestsNo);
         sharedPreferences = activity.getSharedPreferences(getString(R.string.shared_name), Context.MODE_PRIVATE);
@@ -167,7 +164,6 @@ public class UserPerInfo extends Fragment implements
         });
 
         rgPeriority = viewGroup.findViewById(R.id.rgPeriority);
-        rgSatisfaction = viewGroup.findViewById(R.id.rgSatisfaction);
         rgInteressCnss = viewGroup.findViewById(R.id.rgInteressCnss);
 
         btnNextSlide = viewGroup.findViewById(R.id.btnNextSlide);
@@ -185,7 +181,6 @@ public class UserPerInfo extends Fragment implements
         txtCode.setText(codeBare);
 
         rgInteressCnss.setOnCheckedChangeListener(this);
-        rgSatisfaction.setOnCheckedChangeListener(this);
         rgPeriority.setOnCheckedChangeListener(this);
         // set buttons onclick listner events
         btnTakeClientPic.setOnClickListener(this);
@@ -356,12 +351,6 @@ public class UserPerInfo extends Fragment implements
             case R.id.btnPeriorityNo:
                 activity.clientPeriority = false;
                 break;
-            case R.id.btnSatisfactionYes:
-                activity.clientSatisfacion = true;
-                break;
-            case R.id.btnSatisfactionNo:
-                activity.clientSatisfacion = false;
-                break;
             case R.id.btnInterestsYes:
                 activity.clientInterssCnss = true;
                 break;
@@ -459,7 +448,6 @@ public class UserPerInfo extends Fragment implements
         String role = sharedPreferences.getString("role","0");
         if(role.equals("2")){
             TakePicLayout.setVisibility(View.GONE);
-            localGps.setVisibility(View.GONE);
             edtClientName.setEnabled(false);
             edtClientEmail.setEnabled(false);
             edtClientAddress.setEnabled(false);
@@ -468,10 +456,6 @@ public class UserPerInfo extends Fragment implements
             //btnPeriorityYes.setChecked(false);
             btnPeriorityNo.setEnabled(false);
             //btnPeriorityNo.setChecked(false);
-            btnSatisfactionYes.setEnabled(false);
-            //btnSatisfactionYes.setChecked(false);
-            btnSatisfactionNo.setEnabled(false);
-            //btnSatisfactionNo.setChecked(false);
             btnInterestsYes.setEnabled(false);
             //btnInterestsYes.setChecked(false);
             btnInterestsNo.setEnabled(false);
@@ -509,11 +493,9 @@ public class UserPerInfo extends Fragment implements
                 btnPeriorityYes.setChecked(false);
             }
             if(client.getString("satisfaction").equals("1")){
-                btnSatisfactionNo.setChecked(false);
-                btnSatisfactionYes.setChecked(true);
+                activity.visSatisfactionYes = true;
             }else {
-                btnSatisfactionNo.setChecked(true);
-                btnSatisfactionYes.setChecked(false);
+                activity.visSatisfactionYes = false;
             }
             if(client.getString("cnss_interess").equals("1")){
                 btnInterestsYes.setChecked(true);

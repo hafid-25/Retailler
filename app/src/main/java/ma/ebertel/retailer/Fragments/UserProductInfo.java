@@ -44,6 +44,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.common.collect.ForwardingObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,7 +70,8 @@ import ma.ebertel.retailer.Helpers.BitmapHelper;
 import ma.ebertel.retailer.MainActivity;
 import ma.ebertel.retailer.R;
 
-public class UserProductInfo extends Fragment implements CompoundButton.OnCheckedChangeListener {
+public class UserProductInfo extends Fragment implements CompoundButton.OnCheckedChangeListener,
+RadioGroup.OnCheckedChangeListener{
 
     private MainActivity activity;
     private Button btnSubmitUser;
@@ -105,6 +107,8 @@ public class UserProductInfo extends Fragment implements CompoundButton.OnChecke
     private List<String> checkedCoucheIds;
     private List<String> coucheNames;
     private List<String> coucheIds;
+
+    private RadioGroup rgSatisfaction;
 
     public UserProductInfo(MainActivity activity){
         this.activity = activity;
@@ -157,9 +161,12 @@ public class UserProductInfo extends Fragment implements CompoundButton.OnChecke
         biscuitsRecycler = viewGroup.findViewById(R.id.biscuitsRecycler);
         patesRecycler = viewGroup.findViewById(R.id.patesRecycler);
         coucheRecycler = viewGroup.findViewById(R.id.coucheRecycler);
+        rgSatisfaction = viewGroup.findViewById(R.id.rgSatisfaction);
 
 
         sharedPreferences = activity.getSharedPreferences(getString(R.string.shared_name),Context.MODE_PRIVATE);
+
+        rgSatisfaction.setOnCheckedChangeListener(this);
 
         btnSubmitUser = viewGroup.findViewById(R.id.btnSubmitUser);
         btnSubmitUser.setOnClickListener(new View.OnClickListener() {
@@ -678,5 +685,17 @@ public class UserProductInfo extends Fragment implements CompoundButton.OnChecke
         }
         return null;
 
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        switch (radioGroup.getCheckedRadioButtonId()){
+            case R.id.btnSatisfactionYes:
+                activity.clientSatisfacion = true;
+                break;
+            case R.id.btnSatisfactionNo:
+                activity.clientSatisfacion = false;
+                break;
+        }
     }
 }
