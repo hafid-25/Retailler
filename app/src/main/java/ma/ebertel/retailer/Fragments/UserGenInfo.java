@@ -25,6 +25,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -45,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ma.ebertel.retailer.Adapters.MobileMonnyAdapter;
 import ma.ebertel.retailer.Helpers.BitmapHelper;
 import ma.ebertel.retailer.Login;
 import ma.ebertel.retailer.MainActivity;
@@ -55,36 +58,39 @@ public class UserGenInfo extends Fragment implements
         RadioGroup.OnCheckedChangeListener {
 
     MainActivity activity;
-    public CheckBox chkPotInwi,chkPotOrange,chkPotIam
+    private CheckBox chkPotInwi,chkPotOrange,chkPotIam
             ,chkHasOrgDealer,chkHasInwiDealer,chkHasIamDealer
             ,chkHasOrgDealerActiva,chkHasInwiDealerActiva,chkHasIamDealerActiva
             ,chkHasOrgDealerAdv,chkHasInwiDealerAdv,chkHasIamDealerAdv
             ,chkHasOrgRechargeExp,chkHasInwiRechargeExp,chkHasIamRechargeExp
             ,chkHasOrgRechargeGra,chkHasInwiRechargeGra,chkHasIamRechargeGra
             ,chkHasOrgCim,chkHasInwiCim,chkHasIamCim;
-    public ImageButton btnAddValidUser;
-    public EditText edtOrgCimPrixu,edtInwiCimPrixu,edtIamCimPrixu
+    private ImageButton btnAddValidUser;
+    private EditText edtOrgCimPrixu,edtInwiCimPrixu,edtIamCimPrixu
             ,edtOrgCimMaxQte,edtInwiCimMaxQte,edtIamCimMaxQte
             ,edtShowIamChifre,edtShowOrgChifre,edtShowInwiChifre;
-    public RadioGroup radioPropose,radioInterests,radioTelephony,TelephonyRadioGroup,radioAccessoir,AccessGammeRadioGroup;
-    public RadioButton btnAccssBasGamme,btnAccessHautGamme
+    private RadioGroup radioTelephony,TelephonyRadioGroup,radioAccessoir,AccessGammeRadioGroup;
+    private RadioButton btnAccssBasGamme,btnAccessHautGamme
                         ,btnTelHautGamme,btnTelBasGamme
                         ,btnInterestsYes,btnInterestsNo
                         ,btnProposeYes,btnProposeNo
                         ,btnTelephonyNo,btnTelephonyYes
                         ,btnAccessYes,btnAccessNo;
-    public Spinner OrgRechargeChefre,InwiRechargeChefre,IamRechargeChefre
-                ,mobileMoneyTypeList,authorMarksList;
+    private Spinner OrgRechargeChefre,InwiRechargeChefre,IamRechargeChefre
+                ,authorMarksList;
     private ViewGroup showIamChifre,showOrgChifre,showInwiChifre;
     private TableRow rechargeChSpinners;
-    public String rechargeIamChifre="",rechargeInwiChifre="",rechargeOrgChifre="",mobileMonnyType="",auhtorMark="";
-    public String[] chifers;
-    public List<String> mobiles;
-    public List<String> Markes;
+    private String rechargeIamChifre="",rechargeInwiChifre="",rechargeOrgChifre="",mobileMonnyType="",auhtorMark="";
+    private String[] chifers;
+    private List<String> mobiles;
+    private List<String> Markes;
 
-    public ViewGroup remarks;
+    private RecyclerView mobileMonnyRecycler;
+    private MobileMonnyAdapter mobileMonnyAdapter;
 
-    public SharedPreferences sharedPreferences;
+    private ViewGroup remarks;
+
+    private SharedPreferences sharedPreferences;
 
     public String submitUrl = "http://hafid.skandev.com/addClient.php";
 
@@ -97,13 +103,12 @@ public class UserGenInfo extends Fragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.user_gen_info,container,false);
 
-        radioPropose = viewGroup.findViewById(R.id.radioPropose);
-        radioInterests = viewGroup.findViewById(R.id.radioInterests);
         radioTelephony = viewGroup.findViewById(R.id.radioTelephony);
         TelephonyRadioGroup = viewGroup.findViewById(R.id.TelephonyRadioGroup);
         radioAccessoir = viewGroup.findViewById(R.id.radioAccessoir);
         AccessGammeRadioGroup = viewGroup.findViewById(R.id.AccessGammeRadioGroup);
         remarks = viewGroup.findViewById(R.id.remarks);
+        mobileMonnyRecycler = viewGroup.findViewById(R.id.mobileMonnyRecycler);
 
         btnAccssBasGamme = viewGroup.findViewById(R.id.btnAccssBasGamme);
         btnAccessHautGamme = viewGroup.findViewById(R.id.btnAccessHautGamme);
@@ -120,8 +125,6 @@ public class UserGenInfo extends Fragment implements
 
         rechargeChSpinners = viewGroup.findViewById(R.id.rechargeChSpinners);
 
-        radioInterests.setOnCheckedChangeListener(this);
-        radioPropose.setOnCheckedChangeListener(this);
         radioTelephony.setOnCheckedChangeListener(this);
         TelephonyRadioGroup.setOnCheckedChangeListener(this);
         radioAccessoir.setOnCheckedChangeListener(this);
@@ -244,9 +247,9 @@ public class UserGenInfo extends Fragment implements
         chkHasIamCim.setOnCheckedChangeListener(this);
 
 
-        chkHasOrgDealerActiva.setOnCheckedChangeListener(this);
-        chkHasInwiDealerActiva.setOnCheckedChangeListener(this);
-        chkHasIamDealerActiva.setOnCheckedChangeListener(this);
+        //chkHasOrgDealerActiva.setOnCheckedChangeListener(this);
+        //chkHasInwiDealerActiva.setOnCheckedChangeListener(this);
+        //chkHasIamDealerActiva.setOnCheckedChangeListener(this);
 
         // potence or visibility spinner
         authorMarksList = viewGroup.findViewById(R.id.authorMarksList);
@@ -268,37 +271,8 @@ public class UserGenInfo extends Fragment implements
         });
 
         // mobile monny spinner
-        mobileMoneyTypeList = viewGroup.findViewById(R.id.mobileMoneyTypeList);
         mobiles = new ArrayList<>();
-        mobiles.add("");
 
-        mobileMoneyTypeList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(sharedPreferences.getString("role","0").equals("1")){
-                    mobileMonnyType = mobiles.get(i);
-                    activity.MobileMonnyType = mobileMonnyType;
-                    if(mobileMonnyType.equals("")){
-                        // deactivate all the radio buttons
-                        btnInterestsYes.setEnabled(false);
-                        btnInterestsNo.setEnabled(false);
-                        btnProposeYes.setEnabled(false);
-                        btnProposeNo.setEnabled(false);
-                    }else {
-                        // reactivate all the authir radio buttons
-                        btnInterestsYes.setEnabled(true);
-                        btnInterestsNo.setEnabled(true);
-                        btnProposeYes.setEnabled(true);
-                        btnProposeNo.setEnabled(true);
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         btnAddValidUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,7 +287,8 @@ public class UserGenInfo extends Fragment implements
                 // set the dealler info
                 setDealerData();
                 // set the rechage data
-                setRechargeData();
+                // we don't need recharge data any more
+                //setRechargeData();
                 // set the sims info
                 setSimsData();
                 // check if the user clicked the button ont the first fragment and the uder info are valied
@@ -321,10 +296,9 @@ public class UserGenInfo extends Fragment implements
                 if(isUserDateValide()){
                     // data is ready to be submitted
                     activity.pager.setCurrentItem(2,true);
-
                 }else {
                     // show message to user
-                    Toast.makeText(activity, "Please Check All Your Fields Something is Messing", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Please Check All Your Fields Something is Messing", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -342,6 +316,8 @@ public class UserGenInfo extends Fragment implements
             getMarks();
             getMobiles();
         }
+
+        // set the mobile monny recycler
         return viewGroup;
     }
 
@@ -366,7 +342,8 @@ public class UserGenInfo extends Fragment implements
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        String checked = compoundButton.getTag().toString();
+        String checked = compoundButton.getTag().toString();;
+
         if(compoundButton.getId() == R.id.chkHasIamDealer || compoundButton.getId() == R.id.chkHasInwiDealer ||
                 compoundButton.getId() == R.id.chkHasOrgDealer){
             if(b){
@@ -404,26 +381,33 @@ public class UserGenInfo extends Fragment implements
     private void setDealerData(){
         String dname ;
         String dactiv;
-        String drech;
+        String drechExp;
+        String drechGra;
         String dadv;
-        String dqtemax;
+        String dchifre;
         activity.Dealers.clear();
         if(chkHasIamDealer.isChecked()){
             // insert the iam dealer info
             // todo update here
             dname = "Iam";
             dactiv = "0";
-            drech = "0";
+            drechExp = "0";
+            drechGra = "0";
             dadv = "0";
-            dqtemax = "0";
             if(chkHasIamDealerActiva.isChecked() && chkHasIamDealerActiva.isEnabled()){
                 dactiv = "1";
             }
             if(chkHasIamDealerAdv.isChecked() && chkHasIamDealerAdv.isEnabled()){
                 dadv = "1";
             }
+            if(chkHasOrgRechargeExp.isChecked() && chkHasOrgRechargeExp.isEnabled()){
+                drechExp = "1";
+            }
+            if(chkHasOrgRechargeGra.isChecked() && chkHasOrgRechargeGra.isEnabled()){
+                drechGra = "1";
+            }
 
-            String[] d = new String[]{dname,dactiv,drech,dadv,dqtemax};
+            String[] d = new String[]{dname,dactiv,drechExp,drechGra,dadv,rechargeIamChifre};
             activity.Dealers.add(d);
         }
         if(chkHasInwiDealer.isChecked()){
@@ -431,17 +415,23 @@ public class UserGenInfo extends Fragment implements
             // todo update here
             dname = "Inwi";
             dactiv = "0";
-            drech = "0";
+            drechExp = "0";
+            drechGra = "0";
             dadv = "0";
-            dqtemax = "0";
             if(chkHasInwiDealerActiva.isChecked() && chkHasInwiDealerActiva.isEnabled()){
                 dactiv = "1";
             }
             if(chkHasInwiDealerAdv.isChecked() && chkHasInwiDealerAdv.isEnabled()){
                 dadv = "1";
             }
+            if(chkHasInwiRechargeExp.isChecked() && chkHasInwiRechargeExp.isEnabled()){
+                drechExp = "1";
+            }
+            if(chkHasInwiRechargeGra.isChecked() && chkHasInwiRechargeGra.isEnabled()){
+                drechGra = "1";
+            }
 
-            String[] d = new String[]{dname,dactiv,drech,dadv,dqtemax};
+            String[] d = new String[]{dname,dactiv,drechExp,drechGra,dadv,rechargeInwiChifre};
             activity.Dealers.add(d);
         }
         if(chkHasOrgDealer.isChecked()){
@@ -449,17 +439,23 @@ public class UserGenInfo extends Fragment implements
             // todo update here
             dname = "Org";
             dactiv = "0";
-            drech = "0";
+            drechExp = "0";
+            drechGra = "0";
             dadv = "0";
-            dqtemax = "0";
             if(chkHasOrgDealerActiva.isChecked() && chkHasOrgDealerActiva.isEnabled()){
                 dactiv = "1";
             }
             if(chkHasOrgDealerAdv.isChecked() && chkHasOrgDealerAdv.isEnabled()){
                 dadv = "1";
             }
+            if(chkHasOrgRechargeExp.isChecked() && chkHasOrgRechargeExp.isEnabled()){
+                drechExp = "1";
+            }
+            if(chkHasOrgRechargeGra.isChecked() && chkHasOrgRechargeGra.isEnabled()){
+                drechGra = "1";
+            }
 
-            String[] d = new String[]{dname,dactiv,drech,dadv,dqtemax};
+            String[] d = new String[]{dname,dactiv,drechExp,drechGra,dadv,rechargeOrgChifre};
             activity.Dealers.add(d);
         }
     }
@@ -664,22 +660,38 @@ public class UserGenInfo extends Fragment implements
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        try{
+            String tag = radioGroup.getTag().toString();
+            int btnCh = radioGroup.getCheckedRadioButtonId();
+            switch (tag){
+                case "propose":
+                    switch (btnCh){
+                        case R.id.radioInterests:
+                            if(btnCh == R.id.btnInterestsYes){
+                                activity.MobileMonyInteress = true;
+                            }else {
+                                activity.MobileMonyInteress = false;
+                            }
+                            break;
+                        case R.id.radioPropose:
+                            if(btnCh == R.id.btnProposeYes){
+                                activity.MobileMonyPropose = true;
+                            }else {
+                                activity.MobileMonyPropose = false;
+                            }
+                            break;
+                    }
+                    break;
+                case "interest":
+                    Toast.makeText(activity, "interests item clicked", Toast.LENGTH_LONG).show();
+                    break;
+            }
+            return;
+        }catch (Exception ex){
+
+        }
         int btnCh = radioGroup.getCheckedRadioButtonId();
         switch (radioGroup.getId()){
-            case R.id.radioInterests:
-                if(btnCh == R.id.btnInterestsYes){
-                    activity.MobileMonyInteress = true;
-                }else {
-                    activity.MobileMonyInteress = false;
-                }
-                break;
-            case R.id.radioPropose:
-                if(btnCh == R.id.btnProposeYes){
-                    activity.MobileMonyPropose = true;
-                }else {
-                    activity.MobileMonyPropose = false;
-                }
-                break;
             case R.id.radioTelephony:
                 if(btnCh == R.id.btnTelephonyYes){
                     activity.Telephony = true;
@@ -751,7 +763,6 @@ public class UserGenInfo extends Fragment implements
         btnAccessYes.setEnabled(false);
         btnAccessYes.setChecked(false);
 
-        mobileMoneyTypeList.setEnabled(false);
         rechargeChSpinners.setVisibility(View.GONE);
 
     }
@@ -964,9 +975,6 @@ public class UserGenInfo extends Fragment implements
                 String interess = jsonObject.getString("interesse");
                 String propos = jsonObject.getString("propose");
                 String operateur = jsonObject.getString("operateur");
-                ArrayAdapter<String> mobileAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item,
-                        new String[]{operateur});
-                mobileMoneyTypeList.setAdapter(mobileAdapter);
                 // set Spinner data
                 Log.d("jsona", "setMobile: interesse = "+interess+" propose = "+propos);
                 if(interess.equals("1")){
@@ -1315,9 +1323,10 @@ public class UserGenInfo extends Fragment implements
                     for(int i=0;i<json.length();i++){
                         mobiles.add(json.getJSONObject(i).getString("operateur"));
                     }
-                    ArrayAdapter<String> mobileAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item,
-                            mobiles);
-                    mobileMoneyTypeList.setAdapter(mobileAdapter);
+                    // set the recycler data
+                    mobileMonnyAdapter = new MobileMonnyAdapter(activity,mobiles,UserGenInfo.this);
+                    mobileMonnyRecycler.setLayoutManager(new LinearLayoutManager(activity));
+                    mobileMonnyRecycler.setAdapter(mobileMonnyAdapter);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

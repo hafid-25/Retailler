@@ -178,6 +178,25 @@ RadioGroup.OnCheckedChangeListener{
                 Log.d("ids", "onClick: biscuit "+getIdsAsString("biscuit"));
                 Log.d("ids", "onClick: pate "+getIdsAsString("pate"));
                 Log.d("ids", "onClick: couche "+getIdsAsString("couche"));
+                Log.d("ids", "onClick: satisfaction "+activity.clientSatisfacion);
+
+                Log.d("ids","clientName "+activity.clientFullName);
+                Log.d("ids","clientCode "+activity.codeBarContent);
+                Log.d("ids","clientPhone "+activity.clientPhoneNumber);
+                Log.d("ids","clientAddr "+activity.clientAddress);
+                Log.d("ids","clientEmail "+activity.clientEmail);
+                Log.d("ids","clientLoc "+activity.clientLocation);
+                Log.d("ids","type "+ activity.clientType);
+                Log.d("ids","clientCity "+ activity.selectedCityCode);
+                Log.d("ids","clientRegion "+ activity.selectedRegionCode);
+                Log.d("ids","clientDealers "+getDealerAsString() != null ? getDealerAsString() : "");
+                Log.d("ids","clientSims "+getSimsAsString() != null ? getSimsAsString() : "");
+                Log.d("ids","clientPot "+getPotenceAsString() != null ? getPotenceAsString() : "");
+                Log.d("ids","clientMobile "+getMobileMonyAsString());
+                Log.d("ids","clientTelephony "+getTelephonyAsString());
+                Log.d("ids","clientAccessoire "+getAccessoireAsString());
+
+
                 if(sharedPreferences.getString("role","0").equals("2")){
                     return;
                 }
@@ -248,7 +267,8 @@ RadioGroup.OnCheckedChangeListener{
         }
     }
 
-    private void setUpRecycler(){
+    private void setUpRecycler()
+    {
         detergentProductAdapter = new DetergentProductAdapter(this.getContext(),detergentNames,this);
         detergentRecycler.setAdapter(detergentProductAdapter);
         detergentRecycler.setHasFixedSize(true);
@@ -551,14 +571,13 @@ RadioGroup.OnCheckedChangeListener{
                 params.put("real_pic", BitmapHelper.convertBitmapToString(activity.clientImage));
                 params.put("type", activity.clientType);
 
-
                 params.put("clientCity", activity.selectedCityCode);
                 params.put("clientRegion", activity.selectedRegionCode);
 
-
                 //complex data
                 params.put("clientDealers",getDealerAsString() != null ? getDealerAsString() : "");
-                params.put("clientRecharge",getRechargeAsString() != null ? getRechargeAsString() : "");
+                // recherge data is removed
+                //params.put("clientRecharge",getRechargeAsString() != null ? getRechargeAsString() : "");
                 params.put("clientSims",getSimsAsString() != null ? getSimsAsString() : "");
                 params.put("clientPot",getPotenceAsString() != null ? getPotenceAsString() : "");
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:layout_marginTop="0dp">
+    tools:layout_marginTop="-600dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -587,6 +587,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:gravity="center"
+                                    android:tag="@string/check_text_orng"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
                                     app:layout_constraintBottom_toBottomOf="parent"
@@ -611,6 +612,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:gravity="center"
+                                    android:tag="@string/check_text_inwi"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
                                     app:layout_constraintBottom_toBottomOf="parent"
@@ -635,6 +637,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:gravity="center"
+                                    android:tag="@string/check_text_iam"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
                                     app:layout_constraintBottom_toBottomOf="parent"
@@ -743,7 +746,8 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:paddingTop="20dp"
-                android:paddingBottom="20dp">
+                android:paddingBottom="20dp"
+                >
                 <TextView
                     android:id="@+id/MobileTitle"
                     android:layout_width="wrap_content"
@@ -754,106 +758,15 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     android:text="@string/mobile_title_text"
                     android:textColor="@color/colorPrimaryDark"/>
-                <Spinner
-                    android:id="@+id/mobileMoneyTypeList"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/mobileMonnyRecycler"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/MobileTitle"/>
-
-                <LinearLayout
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/MobileTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/mobileMoneyTypeList"
-                    android:layout_marginTop="20dp"
-                    android:orientation="vertical"
-                    >
-
-                    <TableLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TableRow>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/txt_intersse"
-                                android:layout_weight="1"
-                                />
-                            <RadioGroup
-                                android:id="@+id/radioInterests"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:orientation="horizontal"
-                                >
-
-                                <RadioButton
-                                    android:id="@+id/btnInterestsYes"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/btn_text_yes"
-                                    android:checked="true"
-                                    />
-
-                                <RadioButton
-                                    android:id="@+id/btnInterestsNo"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/btn_text_no"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginStart="20dp"
-                                    android:checked="false"/>
-
-
-                            </RadioGroup>
-
-                        </TableRow>
-
-                        <TableRow>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/txt_propose"
-                                android:layout_weight="1"
-                                />
-                            <RadioGroup
-                                android:id="@+id/radioPropose"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:orientation="horizontal"
-                                >
-
-                                <RadioButton
-                                    android:id="@+id/btnProposeYes"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/btn_text_yes"
-                                    android:checked="true"
-                                    />
-
-                                <RadioButton
-                                    android:id="@+id/btnProposeNo"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/btn_text_no"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginStart="20dp"
-                                    android:checked="false"/>
-
-
-                            </RadioGroup>
-
-                        </TableRow>
-                    </TableLayout>
-
-                </LinearLayout>
+                    android:layout_height="wrap_content"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
