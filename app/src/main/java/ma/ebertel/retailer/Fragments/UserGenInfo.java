@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,8 +73,6 @@ public class UserGenInfo extends Fragment implements
     private RadioGroup radioTelephony,TelephonyRadioGroup,radioAccessoir,AccessGammeRadioGroup;
     private RadioButton btnAccssBasGamme,btnAccessHautGamme
                         ,btnTelHautGamme,btnTelBasGamme
-                        ,btnInterestsYes,btnInterestsNo
-                        ,btnProposeYes,btnProposeNo
                         ,btnTelephonyNo,btnTelephonyYes
                         ,btnAccessYes,btnAccessNo;
     private Spinner OrgRechargeChefre,InwiRechargeChefre,IamRechargeChefre
@@ -220,11 +219,6 @@ public class UserGenInfo extends Fragment implements
 
 
         btnAddValidUser = viewGroup.findViewById(R.id.btnAddValidUser);
-
-        btnInterestsNo = viewGroup.findViewById(R.id.btnInterestsNo);
-        btnInterestsYes = viewGroup.findViewById(R.id.btnInterestsYes);
-        btnProposeNo = viewGroup.findViewById(R.id.btnProposeNo);
-        btnProposeYes = viewGroup.findViewById(R.id.btnProposeYes);
 
         btnTelephonyYes = viewGroup.findViewById(R.id.btnTelephonyYes);
         btnTelephonyNo = viewGroup.findViewById(R.id.btnTelephonyNo);
@@ -388,7 +382,6 @@ public class UserGenInfo extends Fragment implements
         activity.Dealers.clear();
         if(chkHasIamDealer.isChecked()){
             // insert the iam dealer info
-            // todo update here
             dname = "Iam";
             dactiv = "0";
             drechExp = "0";
@@ -400,10 +393,10 @@ public class UserGenInfo extends Fragment implements
             if(chkHasIamDealerAdv.isChecked() && chkHasIamDealerAdv.isEnabled()){
                 dadv = "1";
             }
-            if(chkHasOrgRechargeExp.isChecked() && chkHasOrgRechargeExp.isEnabled()){
+            if(chkHasIamRechargeExp.isChecked() && chkHasIamRechargeExp.isEnabled()){
                 drechExp = "1";
             }
-            if(chkHasOrgRechargeGra.isChecked() && chkHasOrgRechargeGra.isEnabled()){
+            if(chkHasIamRechargeGra.isChecked() && chkHasIamRechargeGra.isEnabled()){
                 drechGra = "1";
             }
 
@@ -412,7 +405,6 @@ public class UserGenInfo extends Fragment implements
         }
         if(chkHasInwiDealer.isChecked()){
             // insert the inwi dealer info
-            // todo update here
             dname = "Inwi";
             dactiv = "0";
             drechExp = "0";
@@ -436,7 +428,6 @@ public class UserGenInfo extends Fragment implements
         }
         if(chkHasOrgDealer.isChecked()){
             // insert the org dealer info
-            // todo update here
             dname = "Org";
             dactiv = "0";
             drechExp = "0";
@@ -460,54 +451,6 @@ public class UserGenInfo extends Fragment implements
         }
     }
 
-    private void setRechargeData(){
-        String Rname ;
-        // recharge express data
-        String RIamExp = "0";
-        String ROrgExp = "0";
-        String RInwiExp = "0";
-        // recharge grattage data
-        String RIamGra = "0";
-        String ROrgGra = "0";
-        String RInwiGra = "0";
-        activity.Rechargs.clear();
-        /*if(chkHasIamRecharge.isChecked()){
-            Rname = "Iam";
-            if(chkHasIamRechargeExp.isChecked()){
-                RIamExp = "1";
-            }
-            if(chkHasIamRechargeGra.isChecked()){
-                RIamGra = "1";
-            }
-
-            String[] val = new String[]{Rname,RIamExp,RIamGra,rechargeIamChifre};
-            activity.Rechargs.add(val);
-        }
-        if(chkHasOrgRecharge.isChecked()){
-            Rname = "Org";
-            if(chkHasOrgRechargeExp.isChecked()){
-                ROrgExp = "1";
-            }
-            if(chkHasOrgRechargeGra.isChecked()){
-                ROrgGra = "1";
-            }
-
-            String[] val = new String[]{Rname,ROrgExp,ROrgGra,rechargeOrgChifre};
-            activity.Rechargs.add(val);
-        }
-        if(chkHasInwiRecharge.isChecked()){
-            Rname = "Inwi";
-            if(chkHasInwiRechargeExp.isChecked()){
-                RInwiExp = "1";
-            }
-            if(chkHasInwiRechargeGra.isChecked()){
-                RInwiGra = "1";
-            }
-
-            String[] val = new String[]{Rname,RInwiExp,RInwiGra,rechargeInwiChifre};
-            activity.Rechargs.add(val);
-        }*/
-    }
 
     private void setSimsData(){
         String Sname ;
@@ -661,29 +604,70 @@ public class UserGenInfo extends Fragment implements
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
         try{
-            String tag = radioGroup.getTag().toString();
+            String nameTage = ((TableRow)(radioGroup.getParent())).getTag().toString();
+            String TypeTag = radioGroup.getTag().toString();
             int btnCh = radioGroup.getCheckedRadioButtonId();
-            switch (tag){
-                case "propose":
+            switch (TypeTag){
+                // hash entry set ex : mName=>1(interst),0(propse)
+                case "interest":
                     switch (btnCh){
-                        case R.id.radioInterests:
-                            if(btnCh == R.id.btnInterestsYes){
-                                activity.MobileMonyInteress = true;
+                        case R.id.btnInterestsYes:
+                            // check first if the key is already exists
+                            if(activity.MobileMonny.containsKey(nameTage)){
+                                // update the interests value
+                                String val = activity.MobileMonny.get(nameTage);
+                                String propVal = val.split(",")[1];
+                                // update the value
+                                activity.MobileMonny.put(nameTage,1+","+propVal);
                             }else {
-                                activity.MobileMonyInteress = false;
+                                // add the entry
+                                activity.MobileMonny.put(nameTage,1+",0");
                             }
                             break;
-                        case R.id.radioPropose:
-                            if(btnCh == R.id.btnProposeYes){
-                                activity.MobileMonyPropose = true;
+                        case R.id.btnInterestsNo:
+                            // check first if the key is already exists
+                            if(activity.MobileMonny.containsKey(nameTage)){
+                                // update the interests value
+                                String val = activity.MobileMonny.get(nameTage);
+                                String propVal = val.split(",")[1];
+                                // update the value
+                                activity.MobileMonny.put(nameTage,0+","+propVal);
                             }else {
-                                activity.MobileMonyPropose = false;
+                                // add the entry
+                                activity.MobileMonny.put(nameTage,0+",0");
                             }
                             break;
                     }
                     break;
-                case "interest":
-                    Toast.makeText(activity, "interests item clicked", Toast.LENGTH_LONG).show();
+                case "propose":
+                    switch (btnCh){
+                        case R.id.btnProposeYes:
+                            // check first if the key is already exists
+                            if(activity.MobileMonny.containsKey(nameTage)){
+                                // update the interests value
+                                String val = activity.MobileMonny.get(nameTage);
+                                String interVal = val.split(",")[0];
+                                // update the value
+                                activity.MobileMonny.put(nameTage,interVal+","+1);
+                            }else {
+                                // add the entry
+                                activity.MobileMonny.put(nameTage,"0,1");
+                            }
+                            break;
+                        case R.id.btnProposeNo:
+                            // check first if the key is already exists
+                            if(activity.MobileMonny.containsKey(nameTage)){
+                                // update the interests value
+                                String val = activity.MobileMonny.get(nameTage);
+                                String interVal = val.split(",")[0];
+                                // update the value
+                                activity.MobileMonny.put(nameTage,interVal+","+0);
+                            }else {
+                                // add the entry
+                                activity.MobileMonny.put(nameTage,"0,0");
+                            }
+                            break;
+                    }
                     break;
             }
             return;
@@ -749,13 +733,13 @@ public class UserGenInfo extends Fragment implements
         btnTelephonyYes.setEnabled(false);
         //btnTelephonyYes.setChecked(false);
         // mobil mony
-        btnInterestsYes.setEnabled(false);
+        //btnInterestsYes.setEnabled(false);
         //btnInterestsYes.setChecked(false);
-        btnInterestsNo.setEnabled(false);
+        //btnInterestsNo.setEnabled(false);
         //btnInterestsNo.setChecked(false);
         //btnProposeYes.setChecked(false);
-        btnProposeYes.setEnabled(false);
-        btnProposeNo.setEnabled(false);
+        //btnProposeYes.setEnabled(false);
+        //btnProposeNo.setEnabled(false);
         //btnProposeNo.setChecked(false);
 
         btnAccessNo.setChecked(false);
@@ -815,13 +799,13 @@ public class UserGenInfo extends Fragment implements
     }
 
     private void setDealer(JSONObject jsonObject){
-        // todo update the new dealer information
         try {
             String op = jsonObject.getString("operateur");
             String activ = jsonObject.getString("activation");
-            String recharge = jsonObject.getString("recharge");
+            String rechargeEx = jsonObject.getString("RechargeExp");
+            String rechargeGra = jsonObject.getString("RechargeGra");
             String adv = jsonObject.getString("avantageous");
-            String max = jsonObject.getString("numDealer");
+            String chfr = jsonObject.getString("numDealer");
 
             switch (op){
                 case "Org":
@@ -829,9 +813,18 @@ public class UserGenInfo extends Fragment implements
                     if(activ.equals("1")){
                         chkHasOrgDealerActiva.setChecked(true);
                     }
-
+                    if(rechargeEx.equals("1")){
+                        chkHasOrgRechargeExp.setChecked(true);
+                    }
+                    if(rechargeGra.equals("1")){
+                        chkHasOrgRechargeGra.setChecked(true);
+                    }
                     if(adv.equals("1")){
                         chkHasOrgDealerAdv.setChecked(true);
+                    }
+                    if(!chfr.equals("")){
+                        showOrgChifre.setVisibility(View.VISIBLE);
+                        edtShowOrgChifre.setText(chfr);
                     }
                     break;
                 case "Iam":
@@ -839,8 +832,18 @@ public class UserGenInfo extends Fragment implements
                     if(activ.equals("1")){
                         chkHasIamDealerActiva.setChecked(true);
                     }
+                    if(rechargeEx.equals("1")){
+                        chkHasIamRechargeExp.setChecked(true);
+                    }
+                    if(rechargeGra.equals("1")){
+                        chkHasIamRechargeGra.setChecked(true);
+                    }
                     if(adv.equals("1")){
                         chkHasIamDealerAdv.setChecked(true);
+                    }
+                    if(!chfr.equals("")){
+                        showIamChifre.setVisibility(View.VISIBLE);
+                        edtShowIamChifre.setText(chfr);
                     }
                     break;
                 case "Inwi":
@@ -848,8 +851,18 @@ public class UserGenInfo extends Fragment implements
                     if(activ.equals("1")){
                         chkHasInwiDealerActiva.setChecked(true);
                     }
+                    if(rechargeEx.equals("1")){
+                        chkHasInwiRechargeExp.setChecked(true);
+                    }
+                    if(rechargeGra.equals("1")){
+                        chkHasInwiRechargeGra.setChecked(true);
+                    }
                     if(adv.equals("1")){
                         chkHasInwiDealerAdv.setChecked(true);
+                    }
+                    if(!chfr.equals("")){
+                        showInwiChifre.setVisibility(View.VISIBLE);
+                        edtShowInwiChifre.setText(chfr);
                     }
                     break;
             }
@@ -971,26 +984,21 @@ public class UserGenInfo extends Fragment implements
         //[{"idClient":9,"idMobileM":2,"interesse":1,"propose":0}]
         if(mobile != null){
             try {
-                JSONObject jsonObject = mobile.getJSONObject(0);
-                String interess = jsonObject.getString("interesse");
-                String propos = jsonObject.getString("propose");
-                String operateur = jsonObject.getString("operateur");
-                // set Spinner data
-                Log.d("jsona", "setMobile: interesse = "+interess+" propose = "+propos);
-                if(interess.equals("1")){
-                    btnInterestsYes.setChecked(true);
-                    btnInterestsNo.setChecked(false);
-                }else {
-                    btnInterestsYes.setChecked(false);
-                    btnInterestsNo.setChecked(true);
+                StringBuilder builder = new StringBuilder();
+                for(int i=0;i<mobile.length();i++){
+                    JSONObject jsonObject = mobile.getJSONObject(i);
+                    String interess = jsonObject.getString("interesse");
+                    String propos = jsonObject.getString("propose");
+                    String operateur = jsonObject.getString("operateur");
+                    builder.append(operateur+","+interess+","+propos+";");
                 }
-                if(propos.equals("1")){
-                    btnProposeYes.setChecked(true);
-                    btnProposeNo.setChecked(false);
-                }else {
-                    btnProposeYes.setChecked(false);
-                    btnProposeNo.setChecked(true);
-                }
+                builder.append(",");
+                String[] data = builder.toString().replace(";,","").split(";");
+                // create the recycler view adapter
+                mobileMonnyAdapter = new MobileMonnyAdapter(activity,mobiles,UserGenInfo.this,data,2);
+                mobileMonnyRecycler.setLayoutManager(new LinearLayoutManager(activity));
+                mobileMonnyRecycler.setAdapter(mobileMonnyAdapter);
+                //Log.d("data", "setMobile: "+data);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -1174,12 +1182,14 @@ public class UserGenInfo extends Fragment implements
                         }
                         try{
                             JSONObject jsonObject = json.getJSONObject("dealer");
+                            Log.d("dealer", "onResponse: dealer is "+jsonObject.toString());
                             setDealer(jsonObject);
                         }catch (Exception ex){
                             JSONArray jsonArray = json.getJSONArray("dealer");
+                            Log.d("dealer", "onResponse: dealer is "+jsonArray.toString());
                             setDealer(jsonArray);
                         }
-                        try{
+                        /*try{
                             JSONObject jsonObject = json.getJSONObject("recharge");
                             Log.d("recharge", "onResponse: recharge is object");
                             setRecharge(jsonObject);
@@ -1187,7 +1197,7 @@ public class UserGenInfo extends Fragment implements
                             JSONArray jsonArray = json.getJSONArray("recharge");
                             Log.d("recharge", "onResponse: recharge is array");
                             setRecharge(jsonArray);
-                        }
+                        }*/
                         try{
                             JSONObject jsonObject = json.getJSONObject("sims");
                             setSim(jsonObject);
@@ -1197,6 +1207,7 @@ public class UserGenInfo extends Fragment implements
                         }
                         try{
                             JSONArray mobileString = json.getJSONArray("mobile");
+                            Log.d("monny", "onResponse: "+mobileString);
                             setMobile(mobileString);
 
                         }catch (Exception ex){
@@ -1324,7 +1335,7 @@ public class UserGenInfo extends Fragment implements
                         mobiles.add(json.getJSONObject(i).getString("operateur"));
                     }
                     // set the recycler data
-                    mobileMonnyAdapter = new MobileMonnyAdapter(activity,mobiles,UserGenInfo.this);
+                    mobileMonnyAdapter = new MobileMonnyAdapter(activity,mobiles,UserGenInfo.this,null,1);
                     mobileMonnyRecycler.setLayoutManager(new LinearLayoutManager(activity));
                     mobileMonnyRecycler.setAdapter(mobileMonnyAdapter);
                 } catch (JSONException e) {
@@ -1346,5 +1357,6 @@ public class UserGenInfo extends Fragment implements
         RequestQueue requestQueue = Volley.newRequestQueue(activity);
         requestQueue.add(stringRequest);
     }
+
 
 }

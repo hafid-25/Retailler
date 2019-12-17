@@ -1,6 +1,7 @@
 package ma.ebertel.retailer.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -41,6 +43,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -318,7 +321,7 @@ RadioGroup.OnCheckedChangeListener{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -351,7 +354,7 @@ RadioGroup.OnCheckedChangeListener{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -384,7 +387,7 @@ RadioGroup.OnCheckedChangeListener{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -417,7 +420,7 @@ RadioGroup.OnCheckedChangeListener{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -450,7 +453,7 @@ RadioGroup.OnCheckedChangeListener{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -483,7 +486,7 @@ RadioGroup.OnCheckedChangeListener{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -552,7 +555,42 @@ RadioGroup.OnCheckedChangeListener{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d("error", "onErrorResponse: "+error.toString());
+                if(error.toString().equals("com.android.volley.TimeoutError")){
+                    Toast.makeText(activity, "TimeOut Error", Toast.LENGTH_LONG).show();
+                    activity.finish();
+                }
                 Toast.makeText(activity, "Connection Error Or This Client Is Already Exists", Toast.LENGTH_LONG).show();
+                /*String checkUrl = "http://hafid.skandev.com/checkClientExists.php";
+                StringRequest check = new StringRequest(Request.Method.POST, checkUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String msg = jsonObject.getString("message");
+                            if(msg.equals("success")){
+                                Toast.makeText(activity, "This Client Is Already Exists", Toast.LENGTH_LONG).show();
+                                activity.finish();
+                            }else {
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }){
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        HashMap<String,String> params = new HashMap<>();
+                        params.put("code",activity.codeBarContent);
+                        return params;
+                    }
+                };
+                RequestQueue queue = Volley.newRequestQueue(activity);
+                queue.add(check);*/
             }
         }){
             @Override
@@ -652,24 +690,19 @@ RadioGroup.OnCheckedChangeListener{
 
     private String getMobileMonyAsString(){
         StringBuilder builder = new StringBuilder();
-        if(!activity.MobileMonnyType.equals("")){
-            builder.append(activity.MobileMonnyType+",");
-            if(activity.MobileMonyInteress){
-                builder.append("true,");
-            }else {
-                builder.append("false,");
+        for (HashMap.Entry entry:activity.MobileMonny.entrySet()) {
+            String[] values = entry.getValue().toString().split(",");
+            if(values[0].equals("1") || values[1].equals("1")){
+                builder.append(entry.getKey()+","+values[0]+","+values[1]+";");
             }
-
-            if(activity.MobileMonyPropose){
-                builder.append("true");
-            }else {
-                builder.append("false");
-            }
-        }else {
-            builder.append("");
         }
-
-        return builder.toString();
+        builder.append(",");
+        String value = builder.toString().replace(";,","").trim();
+        if(value.equals(",")){
+            return "";
+        }else {
+            return value;
+        }
     }
 
     private String getTelephonyAsString(){

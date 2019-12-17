@@ -91,9 +91,10 @@ public class MainActivity extends AppCompatActivity
     public List<String[]> Rechargs = new ArrayList<>();
     public List<String[]> Sims = new ArrayList<>();
 
-    public boolean MobileMonyInteress = true;
+    /*public boolean MobileMonyInteress = true;
     public boolean MobileMonyPropose  = true;
-    public String MobileMonnyType = "";
+    public String MobileMonnyType = "";*/
+    public HashMap<String,String> MobileMonny = new HashMap<>();
 
     public boolean Telephony = false;
     public String TelephonyGamme = "Bas Gamme";
