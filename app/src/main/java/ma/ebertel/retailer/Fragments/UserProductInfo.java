@@ -25,6 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -49,6 +50,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.common.collect.ForwardingObject;
 
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,6 +75,12 @@ import ma.ebertel.retailer.Adapters.ThéProductAdapter;
 import ma.ebertel.retailer.Helpers.BitmapHelper;
 import ma.ebertel.retailer.MainActivity;
 import ma.ebertel.retailer.R;
+import ma.ebertel.retailer.Tasks.GetBiscuitNamesTask;
+import ma.ebertel.retailer.Tasks.GetCoucheNamesTask;
+import ma.ebertel.retailer.Tasks.GetDetergentNamesTask;
+import ma.ebertel.retailer.Tasks.GetLaitNamesTask;
+import ma.ebertel.retailer.Tasks.GetPateNamesTask;
+import ma.ebertel.retailer.Tasks.GetThéNamesTask;
 
 public class UserProductInfo extends Fragment implements CompoundButton.OnCheckedChangeListener,
 RadioGroup.OnCheckedChangeListener{
@@ -83,33 +92,38 @@ RadioGroup.OnCheckedChangeListener{
     private RecyclerView detergentRecycler,théRecycler,laitRecycler,biscuitsRecycler,patesRecycler,coucheRecycler;
     private DetergentProductAdapter detergentProductAdapter;
     private List<String> checkedDetIds;
-    private List<String> detergentNames;
-    private List<String> detergentIds;
+    public List<String> detergentNames;
+    public List<String> detergentIds;
 
     private ThéProductAdapter théProductAdapter;
     private List<String> checkedThéIds;
-    private List<String> théNames;
-    private List<String> théIds;
+    public List<String> théNames;
+    public List<String> théIds;
 
     private LaitProductAdapter laitProductAdapter;
     private List<String> checkedLaitIds;
-    private List<String> laitNames;
-    private List<String> laitIds;
+    public List<String> laitNames;
+    public List<String> laitIds;
 
     private BiscuitProductAdapter biscuitProductAdapter;
     private List<String> checkedbiscuitIds;
-    private List<String> biscuitNames;
-    private List<String> biscuitIds;
+    public List<String> biscuitNames;
+    public List<String> biscuitIds;
 
     private PateProductAdapter pateProductAdapter;
     private List<String> checkedPateIds;
-    private List<String> pateNames;
-    private List<String> pateIds;
+    public List<String> pateNames;
+    public List<String> pateIds;
 
     private CoucheProductAdapter coucheProductAdapter;
     private List<String> checkedCoucheIds;
-    private List<String> coucheNames;
-    private List<String> coucheIds;
+    public List<String> coucheNames;
+    public List<String> coucheIds;
+
+    private TextView detergentItemTitle,ThéItemTitle,LaitItemTitle,BiscuitsItemTitle,PatesItemTitle,CoucheItemTitle;
+
+    private ProgressBar detergentWaiter,théWaiter,laitWaiter,biscuitWaiter,pateWaiter,coucheWaiter;
+    private ExpandableLayout detExpendedLay,théExpandLayout,laitExpandLayout,biscuitExpendLayout,pateExpandeLayout,coucheExpendLayout;
 
     private RadioGroup rgSatisfaction;
 
@@ -141,17 +155,17 @@ RadioGroup.OnCheckedChangeListener{
         coucheIds = new ArrayList<>();
 
         //get all the product types from database
-        getDetergentTypes();
+        //getDetergentTypes();
         // get all the types from database
-        getThéTypes();
+        //getThéTypes();
         // get all the lait (milk) types from database
-        getLaitTypes();
+        //getLaitTypes();
         // get all the biscuit types from database
-        getBiscuitTypes();
+        //getBiscuitTypes();
         // get all pate types from database
-        getPateTypes();
+        //getPateTypes();
         // get all the couche and papier from the database
-        getCoucheTypes();
+        //getCoucheTypes();
     }
 
     @Override
@@ -165,6 +179,104 @@ RadioGroup.OnCheckedChangeListener{
         patesRecycler = viewGroup.findViewById(R.id.patesRecycler);
         coucheRecycler = viewGroup.findViewById(R.id.coucheRecycler);
         rgSatisfaction = viewGroup.findViewById(R.id.rgSatisfaction);
+        detExpendedLay = viewGroup.findViewById(R.id.detExpendedLay);
+        théExpandLayout = viewGroup.findViewById(R.id.théExpandLayout);
+        laitExpandLayout = viewGroup.findViewById(R.id.laitExpandLayout);
+        biscuitExpendLayout = viewGroup.findViewById(R.id.biscuitExpendLayout);
+        pateExpandeLayout = viewGroup.findViewById(R.id.pateExpandeLayout);
+        coucheExpendLayout = viewGroup.findViewById(R.id.coucheExpendLayout);
+        // get the detergent item
+        detergentItemTitle = viewGroup.findViewById(R.id.detergentItemTitle);
+        detergentWaiter = viewGroup.findViewById(R.id.detergentWaiter);
+        detergentItemTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(detergentNames.size() == 0){
+                    GetDetergentNamesTask dTask = new GetDetergentNamesTask(activity,UserProductInfo.this,
+                            detergentRecycler,detergentWaiter,detExpendedLay);
+                    dTask.execute();
+                }else {
+                    detExpendedLay.toggle();
+                }
+            }
+        });
+        // get the thé items
+        ThéItemTitle = viewGroup.findViewById(R.id.ThéItemTitle);
+        théWaiter = viewGroup.findViewById(R.id.théWaiter);
+        ThéItemTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(théNames.size() == 0){
+                    GetThéNamesTask tTask = new GetThéNamesTask(activity,UserProductInfo.this,théRecycler,théWaiter,théExpandLayout);
+                    tTask.execute();
+                }else {
+                    théExpandLayout.toggle();
+                }
+            }
+        });
+
+        // get the lait items
+        LaitItemTitle = viewGroup.findViewById(R.id.LaitItemTitle);
+        laitWaiter = viewGroup.findViewById(R.id.laitWaiter);
+        LaitItemTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(laitNames.size() == 0){
+                    GetLaitNamesTask lTask = new GetLaitNamesTask(activity,UserProductInfo.this,laitRecycler,laitWaiter,laitExpandLayout);
+                    lTask.execute();
+                }else {
+                    laitExpandLayout.toggle();
+                }
+            }
+        });
+
+        // get biscuit items
+        BiscuitsItemTitle = viewGroup.findViewById(R.id.BiscuitsItemTitle);
+        biscuitWaiter = viewGroup.findViewById(R.id.biscuitWaiter);
+        BiscuitsItemTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(biscuitNames.size() == 0){
+                    GetBiscuitNamesTask bTask = new GetBiscuitNamesTask(activity,UserProductInfo.this,biscuitsRecycler,biscuitWaiter,biscuitExpendLayout);
+                    bTask.execute();
+                }else {
+                    biscuitExpendLayout.toggle();
+                }
+            }
+        });
+        // get pate Items
+        PatesItemTitle = viewGroup.findViewById(R.id.PatesItemTitle);
+        pateWaiter = viewGroup.findViewById(R.id.pateWaiter);
+        PatesItemTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(pateNames.size()== 0){
+                    GetPateNamesTask pTask = new GetPateNamesTask(activity,UserProductInfo.this,patesRecycler,pateWaiter,pateExpandeLayout);
+                    pTask.execute();
+                }else {
+                    pateExpandeLayout.toggle();
+                }
+            }
+        });
+
+        // get couche items
+        CoucheItemTitle = viewGroup.findViewById(R.id.CoucheItemTitle);
+        coucheWaiter = viewGroup.findViewById(R.id.coucheWaiter);
+        CoucheItemTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(coucheNames.size() == 0){
+                    GetCoucheNamesTask cTask = new GetCoucheNamesTask(activity,UserProductInfo.this,coucheRecycler,coucheWaiter,coucheExpendLayout);
+                    cTask.execute();
+                }else {
+                    coucheExpendLayout.toggle();
+                }
+            }
+        });
+
+
+
+
 
 
         sharedPreferences = activity.getSharedPreferences(getString(R.string.shared_name),Context.MODE_PRIVATE);
@@ -192,9 +304,9 @@ RadioGroup.OnCheckedChangeListener{
                 Log.d("ids","type "+ activity.clientType);
                 Log.d("ids","clientCity "+ activity.selectedCityCode);
                 Log.d("ids","clientRegion "+ activity.selectedRegionCode);
-                Log.d("ids","clientDealers "+getDealerAsString() != null ? getDealerAsString() : "");
-                Log.d("ids","clientSims "+getSimsAsString() != null ? getSimsAsString() : "");
-                Log.d("ids","clientPot "+getPotenceAsString() != null ? getPotenceAsString() : "");
+                Log.d("ids","clientDealers "+(getDealerAsString() != null ? getDealerAsString() : ""));
+                Log.d("ids","clientSims "+(getSimsAsString() != null ? getSimsAsString() : ""));
+                Log.d("ids","clientPot "+(getPotenceAsString() != null ? getPotenceAsString() : ""));
                 Log.d("ids","clientMobile "+getMobileMonyAsString());
                 Log.d("ids","clientTelephony "+getTelephonyAsString());
                 Log.d("ids","clientAccessoire "+getAccessoireAsString());
@@ -207,8 +319,6 @@ RadioGroup.OnCheckedChangeListener{
             }
         });
 
-        // set Up the detergent adapter
-        setUpRecycler();
 
         return viewGroup;
 
@@ -218,6 +328,7 @@ RadioGroup.OnCheckedChangeListener{
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         String itemTag = compoundButton.getTag().toString();
         String itemName = compoundButton.getText().toString();
+
         switch (itemTag){
             case "detergent":
                 int pos = detergentNames.indexOf(itemName);
@@ -270,236 +381,9 @@ RadioGroup.OnCheckedChangeListener{
         }
     }
 
-    private void setUpRecycler()
-    {
-        detergentProductAdapter = new DetergentProductAdapter(this.getContext(),detergentNames,this);
-        detergentRecycler.setAdapter(detergentProductAdapter);
-        detergentRecycler.setHasFixedSize(true);
-        detergentRecycler.setLayoutManager(new GridAutoFitLayoutManager(this.getContext(),150));
-        // thé recycler
-        théProductAdapter = new ThéProductAdapter(this.getContext(),théNames,this);
-        théRecycler.setAdapter(théProductAdapter);
-        théRecycler.setHasFixedSize(true);
-        théRecycler.setLayoutManager(new GridAutoFitLayoutManager(this.getContext(),150));
-        // lait recycler
-        laitProductAdapter = new LaitProductAdapter(this.getContext(),laitNames,this);
-        laitRecycler.setAdapter(laitProductAdapter);
-        laitRecycler.setHasFixedSize(true);
-        laitRecycler.setLayoutManager(new GridAutoFitLayoutManager(this.getContext(),150));
-        // biscuit recycler
-        biscuitProductAdapter = new BiscuitProductAdapter(this.getContext(),biscuitNames,this);
-        biscuitsRecycler.setAdapter(biscuitProductAdapter);
-        biscuitsRecycler.setHasFixedSize(false);
-        biscuitsRecycler.setLayoutManager(new GridAutoFitLayoutManager(this.getContext(),150));
-        // pates recycler
-        pateProductAdapter = new PateProductAdapter(this.getContext(),pateNames,this);
-        patesRecycler.setAdapter(pateProductAdapter);
-        patesRecycler.setHasFixedSize(true);
-        patesRecycler.setLayoutManager(new GridAutoFitLayoutManager(this.getContext(),150));
-        // couche recycler
-        coucheProductAdapter = new CoucheProductAdapter(this.getContext(),coucheNames,this);
-        coucheRecycler.setAdapter(coucheProductAdapter);
-        coucheRecycler.setHasFixedSize(true);
-        coucheRecycler.setLayoutManager(new GridAutoFitLayoutManager(this.getContext(),150));
-    }
 
-    private void getDetergentTypes(){
-        String detergentUrl = "http://hafid.skandev.com/getDetergentTypes.php";
-        StringRequest detergentRequest = new StringRequest(StringRequest.Method.POST, detergentUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    for(int i=0; i < jsonArray.length(); i++){
-                        detergentNames.add(jsonArray.getJSONObject(i).getString("libelle"));
-                        detergentIds.add(jsonArray.getJSONObject(i).getString("id"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> params = new HashMap<>();
-                params.put("type","detergent");
-                return params;
-            }
-        };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
-        requestQueue.add(detergentRequest);
-    }
 
-    private void getThéTypes(){
-        String detergentUrl = "http://hafid.skandev.com/getDetergentTypes.php";
-        StringRequest detergentRequest = new StringRequest(StringRequest.Method.POST, detergentUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    for(int i=0; i < jsonArray.length(); i++){
-                        théNames.add(jsonArray.getJSONObject(i).getString("libelle"));
-                        théIds.add(jsonArray.getJSONObject(i).getString("id"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> params = new HashMap<>();
-                params.put("type","thé");
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
-        requestQueue.add(detergentRequest);
-    }
-
-    private void getLaitTypes(){
-        String detergentUrl = "http://hafid.skandev.com/getDetergentTypes.php";
-        StringRequest detergentRequest = new StringRequest(StringRequest.Method.POST, detergentUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    for(int i=0; i < jsonArray.length(); i++){
-                        laitNames.add(jsonArray.getJSONObject(i).getString("libelle"));
-                        laitIds.add(jsonArray.getJSONObject(i).getString("id"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> params = new HashMap<>();
-                params.put("type","lait");
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
-        requestQueue.add(detergentRequest);
-    }
-
-    private void getBiscuitTypes(){
-        String detergentUrl = "http://hafid.skandev.com/getDetergentTypes.php";
-        StringRequest detergentRequest = new StringRequest(StringRequest.Method.POST, detergentUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    for(int i=0; i < jsonArray.length(); i++){
-                        biscuitNames.add(jsonArray.getJSONObject(i).getString("libelle"));
-                        biscuitIds.add(jsonArray.getJSONObject(i).getString("id"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> params = new HashMap<>();
-                params.put("type","biscuit");
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
-        requestQueue.add(detergentRequest);
-    }
-
-    private void getPateTypes(){
-        String detergentUrl = "http://hafid.skandev.com/getDetergentTypes.php";
-        StringRequest detergentRequest = new StringRequest(StringRequest.Method.POST, detergentUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    for(int i=0; i < jsonArray.length(); i++){
-                        pateNames.add(jsonArray.getJSONObject(i).getString("libelle"));
-                        pateIds.add(jsonArray.getJSONObject(i).getString("id"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> params = new HashMap<>();
-                params.put("type","pate");
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
-        requestQueue.add(detergentRequest);
-    }
-
-    private void getCoucheTypes(){
-        String detergentUrl = "http://hafid.skandev.com/getDetergentTypes.php";
-        StringRequest detergentRequest = new StringRequest(StringRequest.Method.POST, detergentUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    for(int i=0; i < jsonArray.length(); i++){
-                        coucheNames.add(jsonArray.getJSONObject(i).getString("libelle"));
-                        coucheIds.add(jsonArray.getJSONObject(i).getString("id"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Coonection Error", Toast.LENGTH_LONG).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> params = new HashMap<>();
-                params.put("type","couche");
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
-        requestQueue.add(detergentRequest);
-    }
 
     private String getIdsAsString(String type){
         List<String> checkedIds = new ArrayList<>();

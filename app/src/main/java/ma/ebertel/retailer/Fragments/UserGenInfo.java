@@ -16,10 +16,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,6 +41,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +57,7 @@ import ma.ebertel.retailer.Helpers.BitmapHelper;
 import ma.ebertel.retailer.Login;
 import ma.ebertel.retailer.MainActivity;
 import ma.ebertel.retailer.R;
+import ma.ebertel.retailer.Tasks.GetMobileMoneyTypesTask;
 
 public class UserGenInfo extends Fragment implements
         CompoundButton.OnCheckedChangeListener,
@@ -81,8 +86,11 @@ public class UserGenInfo extends Fragment implements
     private TableRow rechargeChSpinners;
     private String rechargeIamChifre="",rechargeInwiChifre="",rechargeOrgChifre="",mobileMonnyType="",auhtorMark="";
     private String[] chifers;
-    private List<String> mobiles;
+    public List<String> mobiles;
     private List<String> Markes;
+    private TextView MobileTitle;
+    private ExpandableLayout mobileMoneyExpended;
+    private ProgressBar progressWaiting;
 
     private RecyclerView mobileMonnyRecycler;
     private MobileMonnyAdapter mobileMonnyAdapter;
@@ -123,6 +131,22 @@ public class UserGenInfo extends Fragment implements
         edtShowInwiChifre = viewGroup.findViewById(R.id.edtShowInwiChifre);
 
         rechargeChSpinners = viewGroup.findViewById(R.id.rechargeChSpinners);
+
+        MobileTitle = viewGroup.findViewById(R.id.MobileTitle);
+        mobileMoneyExpended = viewGroup.findViewById(R.id.mobileMoneyExpended);
+        progressWaiting = viewGroup.findViewById(R.id.progressWaiting);
+        MobileTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mobiles.size() == 0){
+                    GetMobileMoneyTypesTask task = new GetMobileMoneyTypesTask(activity,mobileMoneyExpended,UserGenInfo.this,mobileMonnyRecycler,progressWaiting);
+                    task.execute();
+                }else {
+                    mobileMoneyExpended.toggle();
+                }
+                //mobileMoneyExpended.toggle();
+            }
+        });
 
         radioTelephony.setOnCheckedChangeListener(this);
         TelephonyRadioGroup.setOnCheckedChangeListener(this);
@@ -308,7 +332,7 @@ public class UserGenInfo extends Fragment implements
             showIamChifre.setVisibility(View.GONE);
             showOrgChifre.setVisibility(View.GONE);
             getMarks();
-            getMobiles();
+            //getMobiles();
         }
 
         // set the mobile monny recycler
@@ -1323,40 +1347,6 @@ public class UserGenInfo extends Fragment implements
         requestQueue.add(stringRequest);
     }
 
-    private void getMobiles(){
-        final String typesUrl = "http://hafid.skandev.com/getMobile.php";
-
-        StringRequest stringRequest = new StringRequest(StringRequest.Method.POST, typesUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray json = new JSONArray(response);
-                    for(int i=0;i<json.length();i++){
-                        mobiles.add(json.getJSONObject(i).getString("operateur"));
-                    }
-                    // set the recycler data
-                    mobileMonnyAdapter = new MobileMonnyAdapter(activity,mobiles,UserGenInfo.this,null,1);
-                    mobileMonnyRecycler.setLayoutManager(new LinearLayoutManager(activity));
-                    mobileMonnyRecycler.setAdapter(mobileMonnyAdapter);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("clientType", "onResponse: success");
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "Connection Error", Toast.LENGTH_SHORT).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return super.getParams();
-            }
-        };
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
-        requestQueue.add(stringRequest);
-    }
 
 
 }
