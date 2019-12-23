@@ -347,7 +347,8 @@ public class UserGenInfo extends Fragment implements
     }
 
     private boolean isUserDateValide() {
-        if(!activity.clientFullName.equals("") && !activity.clientLocation.equals("")
+        if(!activity.clientFullName.equals("") &&
+                (!activity.clientLocation.equals("") && !activity.clientLocation.equals(getString(R.string.gps_msg_text)))
                 && !activity.clientPhoneNumber.equals("") && !activity.codeBarContent.equals("")
         && activity.clientImage != null && !activity.clientAddress.equals("")
         && !activity.selectedCityCode.equals("") && !activity.selectedRegionCode.equals("")

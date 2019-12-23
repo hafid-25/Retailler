@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:layout_marginTop="-400dp"
+    tools:layout_marginTop="-200dp"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -144,6 +144,8 @@
                     android:paddingRight="10dp"
                     android:paddingLeft="10dp"
                     app:layout_goneMarginTop="20dp"
+                    android:text="@string/gps_msg_text"
+                    android:textAlignment="center"
                     />
                 <Button
                     android:id="@+id/btnGetClientLocal"

@@ -440,41 +440,12 @@ RadioGroup.OnCheckedChangeListener{
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("error", "onErrorResponse: "+error.toString());
-                if(error.toString().equals("com.android.volley.TimeoutError")){
-                    Toast.makeText(activity, "TimeOut Error", Toast.LENGTH_LONG).show();
+                if(error.toString().equals("com.android.volley.TimeoutError")
+                        || error.toString().equals("com.android.volley.ServerError")){
+                    Toast.makeText(activity, getString(R.string.client_timeOut_text), Toast.LENGTH_LONG).show();
                     activity.finish();
                 }
-                Toast.makeText(activity, "Connection Error Or This Client Is Already Exists", Toast.LENGTH_LONG).show();
-                /*String checkUrl = "http://hafid.skandev.com/checkClientExists.php";
-                StringRequest check = new StringRequest(Request.Method.POST, checkUrl, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            String msg = jsonObject.getString("message");
-                            if(msg.equals("success")){
-                                Toast.makeText(activity, "This Client Is Already Exists", Toast.LENGTH_LONG).show();
-                                activity.finish();
-                            }else {
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        HashMap<String,String> params = new HashMap<>();
-                        params.put("code",activity.codeBarContent);
-                        return params;
-                    }
-                };
-                RequestQueue queue = Volley.newRequestQueue(activity);
-                queue.add(check);*/
+                Toast.makeText(activity, getString(R.string.client_error_text), Toast.LENGTH_LONG).show();
             }
         }){
             @Override
